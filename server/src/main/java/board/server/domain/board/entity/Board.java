@@ -47,4 +47,15 @@ public class Board extends BaseTime {
         this.user = user;
         this.isDeleted = isDeleted;
     }
+
+    // 수정
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    // 삭제 처리
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

@@ -1,5 +1,6 @@
 package board.server.domain.board.service;
 
+import board.server.common.exception.BoardNotFoundException;
 import board.server.common.exception.UserNotFoundException;
 import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.entity.Board;
@@ -23,9 +24,8 @@ public class BoardService {
 
     /**
      * 게시글 생성
-     * @param userId 유저 식별자
-     * @param boardDto
-     * @return
+     * @param userId : 유저 식별자
+     * @param boardDto : 게시글 정보
      */
     @Transactional
     public BoardDto create(Long userId, BoardDto boardDto) {
@@ -34,15 +34,40 @@ public class BoardService {
         return boardMapper.toDto(boardRepository.save(board));
     }
 
-    // 수정
-    // 삭제
-    // 조회
+    /**
+     * 게시글 수정
+     * @param boardDto : 수정한 게시글 정보
+     */
+    @Transactional
+    public BoardDto update(BoardDto boardDto) {
+        Board board = findBoard(boardDto.getId());
+        board.update(boardDto.getTitle(), boardDto.getContent());
+        return boardMapper.toDto(board);
+    }
 
     /**
-     * 유저 검색
+     * 게시글 삭제
+     * @param boardId : 게시글 식별자
+     */
+    @Transactional
+    public void delete(Long boardId) {
+        Board board = findBoard(boardId);
+        board.delete();
+    }
+
+    /**
+     * 특정 유저 검색
      */
     private User findUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    /**
+     * 특정 게시글 검색
+     */
+    private Board findBoard(Long id) {
+        return boardRepository.findById(id)
+                .orElseThrow(() -> new BoardNotFoundException(id));
     }
 }
