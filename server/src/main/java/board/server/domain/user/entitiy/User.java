@@ -1,5 +1,6 @@
 package board.server.domain.user.entitiy;
 
+import board.server.common.converter.BooleanToYnConverter;
 import board.server.common.entitiy.BaseTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class User extends BaseTime {
     private String userName;
 
     @Column(name = "del_yn")
+    @Convert(converter = BooleanToYnConverter.class)
     private Boolean isDeleted;
 
     @Builder

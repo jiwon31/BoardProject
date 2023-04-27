@@ -1,5 +1,6 @@
 package board.server.domain.comment.entity;
 
+import board.server.common.converter.BooleanToYnConverter;
 import board.server.common.entitiy.BaseTime;
 import board.server.domain.board.entity.Board;
 import board.server.domain.user.entitiy.User;
@@ -37,6 +38,7 @@ public class Comment extends BaseTime {
     private Board board;
 
     @Column(name = "del_yn")
+    @Convert(converter = BooleanToYnConverter.class)
     private Boolean isDeleted;
 
     @Builder
