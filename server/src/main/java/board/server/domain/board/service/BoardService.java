@@ -1,6 +1,7 @@
 package board.server.domain.board.service;
 
 import board.server.common.exception.BoardNotFoundException;
+import board.server.common.exception.UserNotBoardAuthorException;
 import board.server.common.exception.UserNotFoundException;
 import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.entity.Board;
@@ -24,7 +25,7 @@ public class BoardService {
 
     /**
      * 게시글 생성
-     * @param userId : 유저 식별자
+     * @param userId   : 유저 식별자
      * @param boardDto : 게시글 정보
      */
     @Transactional
@@ -62,6 +63,19 @@ public class BoardService {
     public BoardDto fineOne(Long boardId) {
         Board board = findBoard(boardId);
         return boardMapper.toDto(board);
+    }
+
+    /**
+     * 회원 권한 검증 (수정, 삭제 시)
+     * @param boardId : 게시글 식별자
+     * @param userId : 유저 식별자
+     */
+    public void checkBoardAuthor(Long boardId, Long userId) {
+        User author = findBoard(boardId).getUser();
+        User user = findUser(userId);
+        if (!author.equals(user)) {
+            throw new UserNotBoardAuthorException(user.getId());
+        }
     }
 
     /**

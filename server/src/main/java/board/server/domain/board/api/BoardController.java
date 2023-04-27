@@ -38,7 +38,8 @@ public class BoardController {
      * 게시글 수정
      */
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateBoardResponse> updateBoard(@PathVariable Long id, @RequestBody @Valid UpdateBoardRequest updateBoardRequest) {
+    public ResponseEntity<UpdateBoardResponse> updateBoard(@PathVariable Long id, @RequestHeader Long userId, @RequestBody @Valid UpdateBoardRequest updateBoardRequest) {
+        boardService.checkBoardAuthor(id, userId);
         BoardDto requestDto = dtoMapper.fromUpdateRequest(id, updateBoardRequest);
         BoardDto boardDto = boardService.update(requestDto);
         return ResponseEntity.ok(dtoMapper.toUpdateResponse(boardDto));
@@ -48,9 +49,10 @@ public class BoardController {
      * 게시글 삭제
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Objects> deleteBoard(@PathVariable Long id) {
+    public ResponseEntity<Objects> deleteBoard(@PathVariable Long id, @RequestHeader Long userId) {
+        boardService.checkBoardAuthor(id, userId);
         boardService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     /**
