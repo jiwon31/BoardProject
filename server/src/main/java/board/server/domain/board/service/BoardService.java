@@ -56,6 +56,15 @@ public class BoardService {
     }
 
     /**
+     * 게시글 한 개 조회
+     * @param boardId : 게시글 식별자
+     */
+    public BoardDto fineOne(Long boardId) {
+        Board board = findBoard(boardId);
+        return boardMapper.toDto(board);
+    }
+
+    /**
      * 특정 유저 검색
      */
     private User findUser(Long id) {

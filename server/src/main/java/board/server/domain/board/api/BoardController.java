@@ -3,6 +3,7 @@ package board.server.domain.board.api;
 import board.server.domain.board.api.request.CreateBoardRequest;
 import board.server.domain.board.api.request.UpdateBoardRequest;
 import board.server.domain.board.api.response.CreateBoardResponse;
+import board.server.domain.board.api.response.GetBoardResponse;
 import board.server.domain.board.api.response.UpdateBoardResponse;
 import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.mapper.BoardDtoMapper;
@@ -50,5 +51,14 @@ public class BoardController {
     public ResponseEntity<Objects> deleteBoard(@PathVariable Long id) {
         boardService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 게시글 1개 조회
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<GetBoardResponse> getSingleBoard(@PathVariable Long id) {
+        BoardDto boardDto = boardService.fineOne(id);
+        return ResponseEntity.ok(dtoMapper.toGetResponse(boardDto));
     }
 }
