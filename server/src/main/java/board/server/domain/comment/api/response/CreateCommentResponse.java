@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class CreateCommentResponse {
 
-    private Long id;
+    private final Long id;
 
     @Builder
     public CreateCommentResponse(Long id) {

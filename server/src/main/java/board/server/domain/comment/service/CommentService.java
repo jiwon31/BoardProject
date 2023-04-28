@@ -1,6 +1,8 @@
 package board.server.domain.comment.service;
 
 import board.server.common.exception.BoardNotFoundException;
+import board.server.common.exception.CommentNotFoundException;
+import board.server.common.exception.UserNotCommentAuthorException;
 import board.server.common.exception.UserNotFoundException;
 import board.server.domain.board.entity.Board;
 import board.server.domain.board.repository.BoardRepository;
@@ -39,6 +41,38 @@ public class CommentService {
         return commentMapper.toDto(commentRepository.save(comment));
     }
 
+    /**
+     * 댓글 수정
+     * @param commentDto : 수정한 댓글 정보
+     */
+    @Transactional
+    public CommentDto update(CommentDto commentDto) {
+        Comment comment = findComment(commentDto.getId());
+        comment.update(commentDto.getContent());
+        return commentMapper.toDto(comment);
+    }
+
+    /**
+     * 댓글 삭제
+     * @param commentId : 댓글 식별자
+     */
+    @Transactional
+    public void delete(Long commentId) {
+        Comment comment = findComment(commentId);
+        comment.delete();
+    }
+
+
+    /**
+     * 회원 권한 검증 (수정, 삭제 시)
+     */
+    public void checkCommentAuthor(Long commentId ,Long userId) {
+        User author = findComment(commentId).getUser();
+        User user = findUser(userId);
+        if (!author.equals(user)) {
+            throw new UserNotCommentAuthorException(user.getId());
+        }
+    }
 
     /**
      * 특정 유저 검색
@@ -54,5 +88,13 @@ public class CommentService {
     private Board findBoard(Long id) {
         return boardRepository.findById(id)
                 .orElseThrow(() -> new BoardNotFoundException(id));
+    }
+
+    /**
+     * 특정 댓글 검색
+     */
+    private Comment findComment(Long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException(id));
     }
 }

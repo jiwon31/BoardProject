@@ -44,4 +44,14 @@ public class Comment extends BaseTime {
         this.board = board;
         this.isDeleted = isDeleted;
     }
+
+    // 수정
+    public void update(String content) {
+        this.content = content;
+    }
+
+    // 삭제 처리
+    public void delete() {
+        this.isDeleted = true;
+    }
 }
