@@ -7,8 +7,6 @@ import board.server.domain.user.entitiy.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -29,12 +27,10 @@ public class Comment extends BaseTime {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "board_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
     @Column(name = "del_yn")
