@@ -6,6 +6,8 @@ import board.server.domain.user.entitiy.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper
 public interface BoardMapper {
 
@@ -15,4 +17,6 @@ public interface BoardMapper {
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "user.userName", target = "userName")
     BoardDto toDto(Board board);
+
+    List<BoardDto> toDtoList(List<Board> boardList);
 }
