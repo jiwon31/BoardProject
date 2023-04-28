@@ -3,6 +3,7 @@ package board.server.domain.comment.api;
 import board.server.domain.comment.api.request.CreateCommentRequest;
 import board.server.domain.comment.api.request.UpdateCommentRequest;
 import board.server.domain.comment.api.response.CreateCommentResponse;
+import board.server.domain.comment.api.response.GetCommentListResponse;
 import board.server.domain.comment.api.response.UpdateCommentResponse;
 import board.server.domain.comment.dto.CommentDto;
 import board.server.domain.comment.mapper.CommentDtoMapper;
@@ -13,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,5 +58,14 @@ public class CommentController {
         commentService.checkCommentAuthor(commentId, userId);
         commentService.delete(commentId);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 댓글 리스트 조회
+     */
+    @GetMapping("/boards/{boardId}/comments")
+    public ResponseEntity<List<GetCommentListResponse>> getCommentList(@PathVariable Long boardId) {
+        List<CommentDto> commentList = commentService.findAll(boardId);
+        return ResponseEntity.ok(commentList.stream().map(dtoMapper::toGetResponse).collect(Collectors.toList()));
     }
 }

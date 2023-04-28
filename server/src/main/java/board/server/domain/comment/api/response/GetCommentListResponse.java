@@ -1,4 +1,4 @@
-package board.server.domain.comment.dto;
+package board.server.domain.comment.api.response;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class CommentDto {
+public class GetCommentListResponse {
 
     private final Long id;
 
@@ -21,7 +21,7 @@ public class CommentDto {
     private final LocalDateTime createdAt;
 
     @Builder
-    public CommentDto(Long id, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt) {
+    public GetCommentListResponse(Long id, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt) {
         this.id = id;
         this.content = content;
         this.userId = userId;

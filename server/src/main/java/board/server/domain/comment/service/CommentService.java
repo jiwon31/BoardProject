@@ -17,6 +17,8 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -29,8 +31,8 @@ public class CommentService {
 
     /**
      * 댓글 생성
-     * @param userId : 유저 식별자
-     * @param boardId : 게시글 식별자
+     * @param userId     : 유저 식별자
+     * @param boardId    : 게시글 식별자
      * @param commentDto : 댓글 정보
      */
     @Transactional
@@ -62,11 +64,20 @@ public class CommentService {
         comment.delete();
     }
 
+    /**
+     * 댓글 리스트 조회
+     * @param boardId : 게시글 식별자
+     */
+    public List<CommentDto> findAll(Long boardId) {
+        Board board = findBoard(boardId);
+        List<Comment> commentList = commentRepository.findAllByBoard(board);
+        return commentMapper.toDtoList(commentList);
+    }
 
     /**
      * 회원 권한 검증 (수정, 삭제 시)
      */
-    public void checkCommentAuthor(Long commentId ,Long userId) {
+    public void checkCommentAuthor(Long commentId, Long userId) {
         User author = findComment(commentId).getUser();
         User user = findUser(userId);
         if (!author.equals(user)) {

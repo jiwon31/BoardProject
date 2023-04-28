@@ -19,5 +19,4 @@ public interface BoardDtoMapper {
     UpdateBoardResponse toUpdateResponse(BoardDto boardDto);
 
     GetBoardResponse toGetResponse(BoardDto boardDto);
-
 }
