@@ -37,10 +37,12 @@ public class BoardController {
     /**
      * 게시글 수정
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<UpdateBoardResponse> updateBoard(@PathVariable Long id, @RequestHeader Long userId, @RequestBody @Valid UpdateBoardRequest updateBoardRequest) {
-        boardService.checkBoardAuthor(id, userId);
-        BoardDto requestDto = dtoMapper.fromUpdateRequest(id, updateBoardRequest);
+    @PutMapping("/{boardId}")
+    public ResponseEntity<UpdateBoardResponse> updateBoard(@PathVariable Long boardId,
+                                                           @RequestHeader Long userId,
+                                                           @RequestBody @Valid UpdateBoardRequest updateBoardRequest) {
+        boardService.checkBoardAuthor(boardId, userId);
+        BoardDto requestDto = dtoMapper.fromUpdateRequest(boardId, updateBoardRequest);
         BoardDto boardDto = boardService.update(requestDto);
         return ResponseEntity.ok(dtoMapper.toUpdateResponse(boardDto));
     }
@@ -48,19 +50,19 @@ public class BoardController {
     /**
      * 게시글 삭제
      */
-    @PatchMapping("/{id}")
-    public ResponseEntity<Objects> deleteBoard(@PathVariable Long id, @RequestHeader Long userId) {
-        boardService.checkBoardAuthor(id, userId);
-        boardService.delete(id);
+    @PatchMapping("/{boardId}")
+    public ResponseEntity<Objects> deleteBoard(@PathVariable Long boardId, @RequestHeader Long userId) {
+        boardService.checkBoardAuthor(boardId, userId);
+        boardService.delete(boardId);
         return ResponseEntity.noContent().build();
     }
 
     /**
      * 게시글 1개 조회
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<GetBoardResponse> getSingleBoard(@PathVariable Long id) {
-        BoardDto boardDto = boardService.fineOne(id);
+    @GetMapping("/{boardId}")
+    public ResponseEntity<GetBoardResponse> getSingleBoard(@PathVariable Long boardId) {
+        BoardDto boardDto = boardService.fineOne(boardId);
         return ResponseEntity.ok(dtoMapper.toGetResponse(boardDto));
     }
 }
