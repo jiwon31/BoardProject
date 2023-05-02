@@ -36,8 +36,8 @@ public class BoardController {
      * 게시글 생성
      */
     @PostMapping
-    public ResponseEntity<CreateBoardResponse> createBoard(@RequestHeader Long userId, @RequestBody @Valid CreateBoardRequest createBoardRequest) {
-        BoardDto requestDto = dtoMapper.fromCreateRequest(createBoardRequest);
+    public ResponseEntity<CreateBoardResponse> createBoard(@RequestHeader Long userId, @RequestBody @Valid CreateBoardRequest request) {
+        BoardDto requestDto = dtoMapper.fromCreateRequest(request);
         Long boardId = boardService.create(userId, requestDto).getId();
         return ResponseEntity.ok(new CreateBoardResponse(boardId));
     }
@@ -48,9 +48,9 @@ public class BoardController {
     @PutMapping("/{boardId}")
     public ResponseEntity<UpdateBoardResponse> updateBoard(@PathVariable Long boardId,
                                                            @RequestHeader Long userId,
-                                                           @RequestBody @Valid UpdateBoardRequest updateBoardRequest) {
+                                                           @RequestBody @Valid UpdateBoardRequest request) {
         boardService.checkBoardAuthor(boardId, userId);
-        BoardDto requestDto = dtoMapper.fromUpdateRequest(boardId, updateBoardRequest);
+        BoardDto requestDto = dtoMapper.fromUpdateRequest(boardId, request);
         BoardDto boardDto = boardService.update(requestDto);
         return ResponseEntity.ok(dtoMapper.toUpdateResponse(boardDto));
     }
