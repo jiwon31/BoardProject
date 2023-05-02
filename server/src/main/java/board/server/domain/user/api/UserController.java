@@ -2,7 +2,7 @@ package board.server.domain.user.api;
 
 import board.server.domain.board.dto.BoardDto;
 import board.server.domain.user.api.response.GetMyBoardListResponse;
-import board.server.domain.user.dto.UserDtoMapper;
+import board.server.domain.user.mapper.UserDtoMapper;
 import board.server.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;

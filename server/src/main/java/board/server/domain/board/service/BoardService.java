@@ -25,6 +25,7 @@ public class BoardService {
 
     /**
      * 게시글 생성
+     *
      * @param userId   : 유저 식별자
      * @param boardDto : 게시글 정보
      */
@@ -37,6 +38,7 @@ public class BoardService {
 
     /**
      * 게시글 수정
+     *
      * @param boardDto : 수정한 게시글 정보
      */
     @Transactional
@@ -48,6 +50,7 @@ public class BoardService {
 
     /**
      * 게시글 삭제
+     *
      * @param boardId : 게시글 식별자
      */
     @Transactional
@@ -58,6 +61,7 @@ public class BoardService {
 
     /**
      * 게시글 한 개 조회
+     *
      * @param boardId : 게시글 식별자
      */
     public BoardDto fineOne(Long boardId) {
@@ -67,8 +71,9 @@ public class BoardService {
 
     /**
      * 회원 권한 검증 (수정, 삭제 시)
+     *
      * @param boardId : 게시글 식별자
-     * @param userId : 유저 식별자
+     * @param userId  : 유저 식별자
      */
     public void checkBoardAuthor(Long boardId, Long userId) {
         User author = findBoard(boardId).getUser();

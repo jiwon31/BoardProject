@@ -3,18 +3,25 @@ package board.server.domain.board.api;
 import board.server.domain.board.api.request.CreateBoardRequest;
 import board.server.domain.board.api.request.UpdateBoardRequest;
 import board.server.domain.board.api.response.CreateBoardResponse;
+import board.server.domain.board.api.response.GetBoardListResponse;
 import board.server.domain.board.api.response.GetBoardResponse;
 import board.server.domain.board.api.response.UpdateBoardResponse;
 import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.mapper.BoardDtoMapper;
+import board.server.domain.board.service.BoardSearchService;
 import board.server.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/boards")
@@ -22,6 +29,7 @@ import java.util.Objects;
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardSearchService boardSearchService;
     private final BoardDtoMapper dtoMapper = Mappers.getMapper(BoardDtoMapper.class);
 
     /**
@@ -64,5 +72,23 @@ public class BoardController {
     public ResponseEntity<GetBoardResponse> getSingleBoard(@PathVariable Long boardId) {
         BoardDto boardDto = boardService.fineOne(boardId);
         return ResponseEntity.ok(dtoMapper.toGetResponse(boardDto));
+    }
+
+    /**
+     * 게시글 리스트 조회 / 검색
+     *
+     * @param title    : 제목
+     * @param content  : 본문
+     * @param pageable : 페이징
+     * @return
+     */
+    @GetMapping
+    public ResponseEntity<List<GetBoardListResponse>> getBoardList(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String content,
+            @PageableDefault(size = 16, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        List<BoardDto> boardList = boardSearchService.getBoardListBySearchConditions(title, content, pageable);
+        return ResponseEntity.ok(boardList.stream().map(dtoMapper::toGetListResponse).collect(Collectors.toList()));
     }
 }

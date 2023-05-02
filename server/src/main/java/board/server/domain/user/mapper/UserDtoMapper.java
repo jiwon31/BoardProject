@@ -1,4 +1,4 @@
-package board.server.domain.user.dto;
+package board.server.domain.user.mapper;
 
 import board.server.domain.board.dto.BoardDto;
 import board.server.domain.user.api.response.GetMyBoardListResponse;
