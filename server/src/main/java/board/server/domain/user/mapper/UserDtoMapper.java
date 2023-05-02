@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface UserDtoMapper {
 
-    GetMyBoardListResponse toGetResponse(BoardDto boardDto);
+    GetMyBoardListResponse toGetMyBoardListResponse(BoardDto boardDto);
 }

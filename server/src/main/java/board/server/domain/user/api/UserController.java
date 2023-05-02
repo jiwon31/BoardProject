@@ -29,6 +29,6 @@ public class UserController {
     @GetMapping("/users/boards")
     public ResponseEntity<List<GetMyBoardListResponse>> getMyBoardList(@RequestHeader Long userId) {
         List<BoardDto> myBoardList = userService.findMyBoardList(userId);
-        return ResponseEntity.ok(myBoardList.stream().map(userDtoMapper::toGetResponse).collect(Collectors.toList()));
+        return ResponseEntity.ok(myBoardList.stream().map(userDtoMapper::toGetMyBoardListResponse).collect(Collectors.toList()));
     }
 }
