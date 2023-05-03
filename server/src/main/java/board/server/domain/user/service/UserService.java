@@ -5,6 +5,7 @@ import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.entity.Board;
 import board.server.domain.board.mapper.BoardMapper;
 import board.server.domain.board.repository.BoardRepository;
+import board.server.domain.user.entitiy.Role;
 import board.server.domain.user.entitiy.User;
 import board.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +30,14 @@ public class UserService {
     // TODO: 회원가입 구현 후 삭제
     @Transactional
     public void createTestUser() {
-        userRepository.save(new User("user1@gmail.com", "1234", "user1", false));
-        userRepository.save(new User("user2@gmail.com", "5678", "user2", false));
-        userRepository.save(new User("user3@gmail.com", "9012", "user3", false));
+        userRepository.save(new User("user1@gmail.com", "1234", "user1", Role.USER, false));
+        userRepository.save(new User("user2@gmail.com", "5678", "user2", Role.USER, false));
+        userRepository.save(new User("user3@gmail.com", "9012", "user3", Role.USER, false));
     }
 
     /**
      * 사용자가 작성한 게시글 리스트 조회
+     *
      * @param userId : 유저 식별자
      */
     public List<BoardDto> findMyBoardList(Long userId) {

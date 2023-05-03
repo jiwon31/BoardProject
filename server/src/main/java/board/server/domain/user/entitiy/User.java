@@ -26,15 +26,19 @@ public class User extends BaseTime {
     @Column(name = "user_name", length = 20, unique = true)
     private String userName;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @Column(name = "del_yn")
     @Convert(converter = BooleanToYnConverter.class)
     private Boolean isDeleted;
 
     @Builder
-    public User(String email, String password, String userName, Boolean isDeleted) {
+    public User(String email, String password, String userName, Role role, Boolean isDeleted) {
         this.email = email;
         this.password = password;
         this.userName = userName;
+        this.role = role;
         this.isDeleted = isDeleted;
     }
 }
