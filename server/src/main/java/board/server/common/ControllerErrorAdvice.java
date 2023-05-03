@@ -1,9 +1,6 @@
 package board.server.common;
 
-import board.server.common.exception.BoardNotFoundException;
-import board.server.common.exception.UserNotBoardAuthorException;
-import board.server.common.exception.UserNotCommentAuthorException;
-import board.server.common.exception.UserNotFoundException;
+import board.server.common.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,6 +19,18 @@ public class ControllerErrorAdvice {
     @ExceptionHandler(BoardNotFoundException.class)
     public ErrorResponse handleBoardNotFoundException() {
         return new ErrorResponse("해당 게시글을 찾을 수 없습니다.");
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ErrorResponse handleDuplicateEmailException() {
+        return new ErrorResponse("이미 존재하는 이메일입니다.");
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DuplicateUserNameException.class)
+    public ErrorResponse handleDuplicateUserNameException() {
+        return new ErrorResponse("이미 존재하는 닉네임입니다.");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
