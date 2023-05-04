@@ -2,12 +2,19 @@ package board.server.common;
 
 import board.server.common.exception.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ControllerErrorAdvice {
+
+//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+//    @ExceptionHandler(AuthenticationException.class)
+//    public ErrorResponse handleAuthenticationException() {
+//        return new ErrorResponse("아이디나 비밀번호가 일치하지 않습니다.");
+//    }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)

@@ -11,17 +11,22 @@ import board.server.domain.board.mapper.BoardDtoMapper;
 import board.server.domain.board.service.BoardSearchService;
 import board.server.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static java.lang.Long.parseLong;
 
 @RestController
 @RequestMapping("/boards")
@@ -36,9 +41,9 @@ public class BoardController {
      * 게시글 생성
      */
     @PostMapping
-    public ResponseEntity<CreateBoardResponse> createBoard(@RequestHeader Long userId, @RequestBody @Valid CreateBoardRequest request) {
+    public ResponseEntity<CreateBoardResponse> createBoard(@AuthenticationPrincipal User user, @RequestBody @Valid CreateBoardRequest request) {
         BoardDto requestDto = dtoMapper.fromCreateRequest(request);
-        Long boardId = boardService.create(userId, requestDto).getId();
+        Long boardId = boardService.create(parseLong(user.getUsername()), requestDto).getId();
         return ResponseEntity.ok(new CreateBoardResponse(boardId));
     }
 

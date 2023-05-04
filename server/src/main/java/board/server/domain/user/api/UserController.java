@@ -21,11 +21,6 @@ public class UserController {
     private final UserService userService;
     private final UserDtoMapper userDtoMapper = Mappers.getMapper(UserDtoMapper.class);
 
-    @GetMapping("/create-test-user")
-    public void getTestUser() {
-        userService.createTestUser();
-    }
-
     @GetMapping("/users/boards")
     public ResponseEntity<List<GetMyBoardListResponse>> getMyBoardList(@RequestHeader Long userId) {
         List<BoardDto> myBoardList = userService.findMyBoardList(userId);

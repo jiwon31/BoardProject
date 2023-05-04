@@ -37,12 +37,12 @@ public class TokenProvider {
     private Key key;
 
     // AccessToken 유효시간(30분)
-    @Value("${jwt.refresh-token.expire-length}")
-    private String accessTokenValidMilSecond;
+    @Value("${jwt.access-token.expire-length}")
+    private long accessTokenValidMilSecond;
 
     // RefreshToken 유효시간(일주일)
     @Value("${jwt.refresh-token.expire-length}")
-    private String refreshTokenValidMilSecond;
+    private long refreshTokenValidMilSecond;
 
     // SecretKey 암호화 + 초기화
     @PostConstruct
@@ -62,7 +62,7 @@ public class TokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        long now = (new Date()).getTime();
+        long now = new Date().getTime();
 
         String accessToken = createAccessToken(authentication, authorities, now);
 
@@ -161,7 +161,7 @@ public class TokenProvider {
                 .setSubject(authentication.getName())       // payload "sub": "name"
                 .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "USER"
                 .setExpiration(new Date(now + accessTokenValidMilSecond))        // payload "exp": 1516239022 (예시)
-                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+                .signWith(key, SignatureAlgorithm.HS256)    // header "alg": "HS256"
                 .compact();
     }
 
@@ -174,7 +174,7 @@ public class TokenProvider {
     private String createRefreshToken(long now) {
         return Jwts.builder()
                 .setExpiration(new Date(now + refreshTokenValidMilSecond))
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 }

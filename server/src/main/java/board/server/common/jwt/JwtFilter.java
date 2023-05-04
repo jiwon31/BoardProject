@@ -22,7 +22,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     /**
      * 실제 필터링 로직을 수행한다.
-     * JWT 토큰의 인증 정보를 현재 쓰레드의 SecurityContext에 저장하는 역할
+     * JWT 토큰의 인증 정보를 현재 쓰레드의 SecurityContext 에 저장하는 역할
      *
      * @param request
      * @param response
@@ -59,5 +59,4 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         return null;
     }
-
 }

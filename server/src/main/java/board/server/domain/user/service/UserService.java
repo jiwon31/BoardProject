@@ -25,17 +25,6 @@ public class UserService {
     private final BoardMapper boardMapper = Mappers.getMapper(BoardMapper.class);
 
     /**
-     * 테스트 유저 생성
-     */
-    // TODO: 회원가입 구현 후 삭제
-    @Transactional
-    public void createTestUser() {
-        userRepository.save(new User("user1@gmail.com", "1234", "user1", Role.USER, false));
-        userRepository.save(new User("user2@gmail.com", "5678", "user2", Role.USER, false));
-        userRepository.save(new User("user3@gmail.com", "9012", "user3", Role.USER, false));
-    }
-
-    /**
      * 사용자가 작성한 게시글 리스트 조회
      *
      * @param userId : 유저 식별자

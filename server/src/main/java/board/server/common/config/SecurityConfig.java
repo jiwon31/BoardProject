@@ -1,7 +1,7 @@
 package board.server.common.config;
 
-import board.server.common.jwt.JwtAccessDeniedHandler;
-import board.server.common.jwt.JwtAuthenticationEntryPoint;
+import board.server.common.handler.CustomAccessDeniedHandler;
+import board.server.common.handler.CustomAuthenticationEntryPoint;
 import board.server.common.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,8 +34,8 @@ public class SecurityConfig {
 
                 // exception handling 할 때 우리가 만든 클래스를 추가
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
                 .cors()
 
@@ -48,7 +48,6 @@ public class SecurityConfig {
                 // 토큰이 없는 상태에서 들어올 수 있는 요청은 permitAll 설정
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/create-test-user").permitAll() // TODO: 추후 삭제
                 .antMatchers(HttpMethod.POST, "/auth/signup").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/check-email").permitAll()
