@@ -51,38 +51,50 @@ public class TokenProvider {
     }
 
     /**
-     * 유저 정보를 넘겨받아서 Access Token 과 Refresh Token 을 생성
+     * AccessToken 생성
      *
      * @param authentication
-     * @return
+     * @return AccessToken
      */
-    public TokenDto generateToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication) {
+        return generateToken(authentication, accessTokenValidMilSecond);
+    }
+
+    /**
+     * RefreshToken 생성
+     *
+     * @param authentication
+     * @return RefreshToken
+     */
+    public String createRefreshToken(Authentication authentication) {
+        return generateToken(authentication, refreshTokenValidMilSecond);
+    }
+
+    private String generateToken(Authentication authentication, long tokenValidMilSecond) {
+        long now = new Date().getTime();
+
         // 권한들 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        long now = new Date().getTime();
-
-        String accessToken = createAccessToken(authentication, authorities, now);
-
-        String refreshToken = createRefreshToken(now);
-
-        return TokenDto.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        return Jwts.builder()
+                .setSubject(authentication.getName())       // payload "sub": "name"
+                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "USER"
+                .setExpiration(new Date(now + tokenValidMilSecond))        // payload "exp": 1516239022 (예시)
+                .signWith(key, SignatureAlgorithm.HS256)    // header "alg": "HS256"
+                .compact();
     }
 
     /**
      * Spring Security 인증토큰 발급
      *
-     * @param accessToken
+     * @param token
      * @return
      */
-    public Authentication getAuthentication(String accessToken) {
+    public Authentication getAuthentication(String token) {
         // 토큰 복호화
-        Claims claims = parseClaims(accessToken);
+        Claims claims = parseClaims(token);
 
         Collection<? extends GrantedAuthority> authorities = getAuthorities(claims);
 
@@ -90,28 +102,6 @@ public class TokenProvider {
         UserDetails principal = new User(claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
-    }
-
-    /**
-     * 토큰 정보를 검증
-     *
-     * @param token
-     * @return
-     */
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
-        } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
-        }
-        return false;
     }
 
     /**
@@ -149,32 +139,24 @@ public class TokenProvider {
     }
 
     /**
-     * AccessToken 생성
+     * 토큰 정보를 검증
      *
-     * @param authentication
-     * @param authorities
-     * @param now
-     * @return AccessToken
+     * @param token
+     * @return
      */
-    private String createAccessToken(Authentication authentication, String authorities, long now) {
-        return Jwts.builder()
-                .setSubject(authentication.getName())       // payload "sub": "name"
-                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "USER"
-                .setExpiration(new Date(now + accessTokenValidMilSecond))        // payload "exp": 1516239022 (예시)
-                .signWith(key, SignatureAlgorithm.HS256)    // header "alg": "HS256"
-                .compact();
-    }
-
-    /**
-     * RefreshToken 생성
-     *
-     * @param now
-     * @return RefreshToken
-     */
-    private String createRefreshToken(long now) {
-        return Jwts.builder()
-                .setExpiration(new Date(now + refreshTokenValidMilSecond))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 JWT 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("JWT 토큰이 잘못되었습니다.");
+        }
+        return false;
     }
 }

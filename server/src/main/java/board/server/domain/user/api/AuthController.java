@@ -2,7 +2,7 @@ package board.server.domain.user.api;
 
 import board.server.domain.user.api.request.LoginRequest;
 import board.server.domain.user.api.request.SignupRequest;
-import board.server.domain.user.api.response.LoginResponse;
+import board.server.domain.user.api.response.AuthResponse;
 import board.server.domain.user.dto.TokenDto;
 import board.server.domain.user.dto.UserDto;
 import board.server.domain.user.mapper.AuthDtoMapper;
@@ -12,11 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 
 @RestController
@@ -48,17 +46,30 @@ public class AuthController {
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
         UserDto requestDto = userDtoMapper.fromLoginRequest(request);
         TokenDto tokenDto = authService.login(requestDto);
 
         return ResponseEntity.ok()
                 .header("Set-Cookie", generateCookie(tokenDto).toString())
-                .body(authDtoMapper.toLoginResponse(tokenDto));
+                .body(authDtoMapper.toAuthResponse(tokenDto));
     }
 
     /**
-     * refreshToken 쿠키에 저장
+     * 토큰 재발급
+     *
+     * @param refreshTokenCookie
+     * @return
+     */
+    @PostMapping("/reissue")
+    public ResponseEntity<AuthResponse> reissue(
+            @CookieValue(value = "refreshToken", required = true) Cookie refreshTokenCookie) {
+        TokenDto tokenDto = authService.reissue(refreshTokenCookie.getValue());
+        return ResponseEntity.ok(authDtoMapper.toAuthResponse(tokenDto));
+    }
+
+    /**
+     * refreshToken 을 쿠키에 저장
      *
      * @param tokenDto
      * @return
@@ -67,8 +78,8 @@ public class AuthController {
         return ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
                 .maxAge(604800) // 일주일
                 .path("/")
-                .secure(false)
                 .httpOnly(true)
+                .secure(false)
                 .build();
     }
 }

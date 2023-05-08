@@ -50,6 +50,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth/signup").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/reissue").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/check-email").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/check-username").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/boards").permitAll()
