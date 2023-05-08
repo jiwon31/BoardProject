@@ -20,6 +20,7 @@ public class RefreshToken extends BaseTime {
     @Column(name = "rt_key")
     private String key;
 
+    @Column(name = "rt_value")
     private String token;
 
     @Builder
