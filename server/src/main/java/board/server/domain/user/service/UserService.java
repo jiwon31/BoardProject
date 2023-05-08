@@ -5,7 +5,6 @@ import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.entity.Board;
 import board.server.domain.board.mapper.BoardMapper;
 import board.server.domain.board.repository.BoardRepository;
-import board.server.domain.user.entitiy.Role;
 import board.server.domain.user.entitiy.User;
 import board.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
