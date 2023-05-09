@@ -28,9 +28,6 @@ public class AuthController {
 
     /**
      * 회원가입
-     *
-     * @param request
-     * @return
      */
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody @Valid SignupRequest request) {
@@ -41,9 +38,6 @@ public class AuthController {
 
     /**
      * 로그인
-     *
-     * @param request
-     * @return
      */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
@@ -57,22 +51,15 @@ public class AuthController {
 
     /**
      * 토큰 재발급
-     *
-     * @param refreshTokenCookie
-     * @return
      */
     @PostMapping("/reissue")
-    public ResponseEntity<AuthResponse> reissue(
-            @CookieValue(value = "refreshToken", required = true) Cookie refreshTokenCookie) {
+    public ResponseEntity<AuthResponse> reissue(@CookieValue(value = "refreshToken") Cookie refreshTokenCookie) {
         TokenDto tokenDto = authService.reissue(refreshTokenCookie.getValue());
         return ResponseEntity.ok(authDtoMapper.toAuthResponse(tokenDto));
     }
 
     /**
      * refreshToken 을 쿠키에 저장
-     *
-     * @param tokenDto
-     * @return
      */
     private static ResponseCookie generateCookie(TokenDto tokenDto) {
         return ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())

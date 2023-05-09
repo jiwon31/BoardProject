@@ -28,6 +28,11 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    /**
+     * 회원가입
+     *
+     * @param userDto : 이메일, 비밀번호, 닉네임
+     */
     @Transactional
     public void signup(UserDto userDto) {
         checkEmailDuplicate(userDto.getEmail()); // 이메일 중복 검사
@@ -36,6 +41,12 @@ public class AuthService {
         userRepository.save(user);
     }
 
+    /**
+     * 로그인
+     *
+     * @param userDto : 이메일, 비밀번호
+     * @return
+     */
     @Transactional
     public TokenDto login(UserDto userDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
@@ -62,6 +73,12 @@ public class AuthService {
                 .build();
     }
 
+    /**
+     * 토큰 재발급
+     *
+     * @param token : Refresh Token
+     * @return
+     */
     @Transactional
     public TokenDto reissue(String token) {
         // 1. Refresh Token 검증

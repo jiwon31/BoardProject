@@ -22,6 +22,9 @@ public class UserController {
     private final UserService userService;
     private final UserDtoMapper userDtoMapper = Mappers.getMapper(UserDtoMapper.class);
 
+    /**
+     * 사용자가 작성한 게시글 리스트 조회
+     */
     @GetMapping("/users/boards")
     public ResponseEntity<List<GetMyBoardListResponse>> getMyBoardList() {
         List<BoardDto> myBoardList = userService.findMyBoardList(getUserId());
