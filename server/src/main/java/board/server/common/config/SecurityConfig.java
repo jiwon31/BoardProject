@@ -18,8 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,10 +32,10 @@ public class SecurityConfig {
         // CSRF 설정 Disable
         http.csrf().disable()
 
-                // exception handling 할 때 우리가 만든 클래스를 추가
+                // exception handling
                 .exceptionHandling()
-                .authenticationEntryPoint(customAuthenticationEntryPoint)
-                .accessDeniedHandler(customAccessDeniedHandler)
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .cors()
 
@@ -53,14 +53,10 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/auth/reissue").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/check-email").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/check-username").permitAll()
-                .antMatchers(HttpMethod.GET, "/users/boards").permitAll()
-                .antMatchers(HttpMethod.GET, "/boards/{boardId}").permitAll()
                 .antMatchers(HttpMethod.GET, "/boards").permitAll()
+                .antMatchers(HttpMethod.GET, "/boards/{boardId}").permitAll()
                 .antMatchers(HttpMethod.GET, "/boards/{boardId}/comments").permitAll()
                 .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
-                // TODO: 로그아웃 처리 추가
-
-                // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));
 

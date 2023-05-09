@@ -1,6 +1,5 @@
 package board.server.common.jwt;
 
-import board.server.domain.user.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;

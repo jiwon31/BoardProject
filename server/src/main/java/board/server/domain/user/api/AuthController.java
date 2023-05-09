@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 
+import static board.server.common.util.SecurityUtil.*;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -59,7 +61,18 @@ public class AuthController {
     }
 
     /**
-     * refreshToken 을 쿠키에 저장
+     * 로그아웃
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        authService.logout(getUserId());
+        return ResponseEntity.ok()
+                .header("Set-Cookie", clearCookie().toString())
+                .body("로그아웃 완료");
+    }
+
+    /**
+     * refresh Token 을 쿠키에 저장
      */
     private static ResponseCookie generateCookie(TokenDto tokenDto) {
         return ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
@@ -67,6 +80,16 @@ public class AuthController {
                 .path("/")
                 .httpOnly(true)
                 .secure(false)
+                .build();
+    }
+
+    /**
+     * 로그아웃 시 refresh Token 쿠키를 삭제
+     */
+    private static ResponseCookie clearCookie() {
+        return ResponseCookie.from("refreshToken", "")
+                .maxAge(0)
+                .path("/")
                 .build();
     }
 }

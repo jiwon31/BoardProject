@@ -10,13 +10,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 public class UserDto {
 
-    private Long id;
+    private final Long id;
 
-    private String email;
+    private final String email;
 
-    private String password;
+    private final String password;
 
-    private String userName;
+    private final String userName;
 
     @Builder
     public UserDto(Long id, String email, String password, String userName) {
