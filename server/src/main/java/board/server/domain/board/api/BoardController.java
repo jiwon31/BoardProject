@@ -11,14 +11,11 @@ import board.server.domain.board.mapper.BoardDtoMapper;
 import board.server.domain.board.service.BoardSearchService;
 import board.server.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static java.lang.Long.parseLong;
+import static board.server.common.util.SecurityUtil.*;
 
 @RestController
 @RequestMapping("/boards")
@@ -41,9 +38,9 @@ public class BoardController {
      * 게시글 생성
      */
     @PostMapping
-    public ResponseEntity<CreateBoardResponse> createBoard(@AuthenticationPrincipal User user, @RequestBody @Valid CreateBoardRequest request) {
+    public ResponseEntity<CreateBoardResponse> createBoard(@RequestBody @Valid CreateBoardRequest request) {
         BoardDto requestDto = dtoMapper.fromCreateRequest(request);
-        Long boardId = boardService.create(parseLong(user.getUsername()), requestDto).getId();
+        Long boardId = boardService.create(getUserId(), requestDto).getId();
         return ResponseEntity.ok(new CreateBoardResponse(boardId));
     }
 
@@ -51,10 +48,8 @@ public class BoardController {
      * 게시글 수정
      */
     @PutMapping("/{boardId}")
-    public ResponseEntity<UpdateBoardResponse> updateBoard(@PathVariable Long boardId,
-                                                           @RequestHeader Long userId,
-                                                           @RequestBody @Valid UpdateBoardRequest request) {
-        boardService.checkBoardAuthor(boardId, userId);
+    public ResponseEntity<UpdateBoardResponse> updateBoard(@PathVariable Long boardId, @RequestBody @Valid UpdateBoardRequest request) {
+        boardService.checkBoardAuthor(boardId, getUserId());
         BoardDto requestDto = dtoMapper.fromUpdateRequest(boardId, request);
         BoardDto boardDto = boardService.update(requestDto);
         return ResponseEntity.ok(dtoMapper.toUpdateResponse(boardDto));
@@ -64,8 +59,8 @@ public class BoardController {
      * 게시글 삭제
      */
     @PatchMapping("/{boardId}")
-    public ResponseEntity<Objects> deleteBoard(@PathVariable Long boardId, @RequestHeader Long userId) {
-        boardService.checkBoardAuthor(boardId, userId);
+    public ResponseEntity<Objects> deleteBoard(@PathVariable Long boardId) {
+        boardService.checkBoardAuthor(boardId, getUserId());
         boardService.delete(boardId);
         return ResponseEntity.noContent().build();
     }

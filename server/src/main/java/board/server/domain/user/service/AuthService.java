@@ -7,11 +7,9 @@ import board.server.domain.user.dto.TokenDto;
 import board.server.domain.user.dto.UserDto;
 import board.server.domain.user.entitiy.RefreshToken;
 import board.server.domain.user.entitiy.User;
-import board.server.domain.user.mapper.UserMapper;
 import board.server.domain.user.repository.RefreshTokenRepository;
 import board.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -29,7 +27,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     @Transactional
     public void signup(UserDto userDto) {
@@ -92,17 +89,15 @@ public class AuthService {
                 .build();
     }
 
-    public boolean checkUserNameDuplicate(String userName) {
+    public void checkUserNameDuplicate(String userName) {
         if (userRepository.existsByUserName(userName)) {
             throw new DuplicateUserNameException(userName);
         }
-        return false;
     }
 
-    public boolean checkEmailDuplicate(String email) {
+    public void checkEmailDuplicate(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new DuplicateEmailException(email);
         }
-        return false;
     }
 }

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static board.server.common.util.SecurityUtil.*;
+
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
@@ -29,11 +31,9 @@ public class CommentController {
      * 댓글 생성
      */
     @PostMapping("/boards/{boardId}/comments")
-    public ResponseEntity<CreateCommentResponse> createComment(@PathVariable Long boardId,
-                                                               @RequestHeader Long userId,
-                                                               @RequestBody @Valid CreateCommentRequest request) {
+    public ResponseEntity<CreateCommentResponse> createComment(@PathVariable Long boardId, @RequestBody @Valid CreateCommentRequest request) {
         CommentDto commentDto = dtoMapper.fromCreateRequest(request);
-        Long commentId = commentService.create(userId, boardId, commentDto).getId();
+        Long commentId = commentService.create(getUserId(), boardId, commentDto).getId();
         return ResponseEntity.ok(new CreateCommentResponse(commentId));
     }
 
@@ -41,11 +41,9 @@ public class CommentController {
      * 댓글 수정
      */
     @PutMapping("/comments/{commentId}")
-    public ResponseEntity<UpdateCommentResponse> updateComment(@PathVariable Long commentId,
-                                                               @RequestHeader Long userId,
-                                                               @RequestBody @Valid UpdateCommentRequest request) {
+    public ResponseEntity<UpdateCommentResponse> updateComment(@PathVariable Long commentId, @RequestBody @Valid UpdateCommentRequest request) {
         CommentDto requestDto = dtoMapper.fromUpdateRequest(commentId, request);
-        commentService.checkCommentAuthor(commentId, userId);
+        commentService.checkCommentAuthor(commentId, getUserId());
         CommentDto commentDto = commentService.update(requestDto);
         return ResponseEntity.ok(dtoMapper.toUpdateResponse(commentDto));
     }
@@ -54,8 +52,8 @@ public class CommentController {
      * 댓글 삭제
      */
     @PatchMapping("/comments/{commentId}")
-    public ResponseEntity<Objects> deleteComment(@PathVariable Long commentId, @RequestHeader Long userId) {
-        commentService.checkCommentAuthor(commentId, userId);
+    public ResponseEntity<Objects> deleteComment(@PathVariable Long commentId) {
+        commentService.checkCommentAuthor(commentId, getUserId());
         commentService.delete(commentId);
         return ResponseEntity.noContent().build();
     }
