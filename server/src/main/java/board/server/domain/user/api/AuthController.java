@@ -32,10 +32,10 @@ public class AuthController {
      * 회원가입
      */
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody @Valid SignupRequest request) {
+    public ResponseEntity signup(@RequestBody @Valid SignupRequest request) {
         UserDto requestDto = userDtoMapper.fromSignupRequest(request);
         authService.signup(requestDto);
-        return ResponseEntity.ok("회원가입 완료");
+        return ResponseEntity.ok("회원가입 되었습니다.");
     }
 
     /**
@@ -64,11 +64,11 @@ public class AuthController {
      * 로그아웃
      */
     @PostMapping("/logout")
-    public ResponseEntity<String> logout() {
+    public ResponseEntity logout() {
         authService.logout(getUserId());
         return ResponseEntity.ok()
                 .header("Set-Cookie", clearCookie().toString())
-                .body("로그아웃 완료");
+                .body("로그아웃 되었습니다.");
     }
 
     /**

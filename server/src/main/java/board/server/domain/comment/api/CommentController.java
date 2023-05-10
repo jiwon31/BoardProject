@@ -42,8 +42,8 @@ public class CommentController {
      */
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<UpdateCommentResponse> updateComment(@PathVariable Long commentId, @RequestBody @Valid UpdateCommentRequest request) {
-        CommentDto requestDto = dtoMapper.fromUpdateRequest(commentId, request);
         commentService.checkCommentAuthor(commentId, getUserId());
+        CommentDto requestDto = dtoMapper.fromUpdateRequest(commentId, request);
         CommentDto commentDto = commentService.update(requestDto);
         return ResponseEntity.ok(dtoMapper.toUpdateResponse(commentDto));
     }
