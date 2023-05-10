@@ -4,7 +4,9 @@ import board.server.common.exception.DuplicateEmailException;
 import board.server.common.exception.DuplicateUserNameException;
 import board.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class UserUtil {
 

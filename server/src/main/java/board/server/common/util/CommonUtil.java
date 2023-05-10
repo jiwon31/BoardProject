@@ -7,7 +7,9 @@ import board.server.domain.board.repository.BoardRepository;
 import board.server.domain.user.entitiy.User;
 import board.server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class CommonUtil {
 

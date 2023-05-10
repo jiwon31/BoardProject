@@ -2,6 +2,7 @@ package board.server.domain.user.entitiy;
 
 import board.server.common.converter.BooleanToYnConverter;
 import board.server.common.entitiy.BaseTime;
+import board.server.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,5 +43,10 @@ public class User extends BaseTime {
         this.userName = userName;
         this.role = role;
         this.isDeleted = isDeleted;
+    }
+
+    public void update(UserDto userDto) {
+        this.email = userDto.getEmail();
+        this.userName = userDto.getUserName();
     }
 }
