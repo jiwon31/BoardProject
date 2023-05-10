@@ -43,6 +43,7 @@ public class UserService {
      * @param userId  : 유저 식별자
      * @param userDto : 수정한 유저 정보
      */
+    @Transactional
     public UserDto updateUserInfo(Long userId, UserDto userDto) {
         User user = commonUtil.findUser(userId);
         checkDuplicateEmailAndUsername(userDto, user);
@@ -61,6 +62,9 @@ public class UserService {
         return boardMapper.toDtoList(boardList);
     }
 
+    /**
+     * 이메일과 닉네임 중복 검사
+     */
     private void checkDuplicateEmailAndUsername(UserDto userDto, User user) {
         if (!user.getEmail().equals(userDto.getEmail())) {
             userUtil.checkEmailDuplicate(userDto.getEmail());

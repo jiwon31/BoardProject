@@ -79,7 +79,6 @@ public class AuthService {
      * @param token : Refresh Token
      * @return
      */
-    @Transactional
     public TokenDto reissue(String token) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(token)) {
