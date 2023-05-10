@@ -48,7 +48,7 @@ public class CommentService {
     @Transactional
     public CommentDto update(CommentDto commentDto) {
         Comment comment = findComment(commentDto.getId());
-        comment.update(commentDto.getContent());
+        comment.update(commentDto);
         return commentMapper.toDto(comment);
     }
 

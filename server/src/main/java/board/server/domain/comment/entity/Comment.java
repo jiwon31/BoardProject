@@ -3,6 +3,7 @@ package board.server.domain.comment.entity;
 import board.server.common.converter.BooleanToYnConverter;
 import board.server.common.entitiy.BaseTime;
 import board.server.domain.board.entity.Board;
+import board.server.domain.comment.dto.CommentDto;
 import board.server.domain.user.entitiy.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,8 +47,8 @@ public class Comment extends BaseTime {
     }
 
     // 수정
-    public void update(String content) {
-        this.content = content;
+    public void update(CommentDto commentDto) {
+        this.content = commentDto.getContent();
     }
 
     // 삭제 처리

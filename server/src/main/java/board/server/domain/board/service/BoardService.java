@@ -42,7 +42,7 @@ public class BoardService {
     @Transactional
     public BoardDto update(BoardDto boardDto) {
         Board board = commonUtil.findBoard(boardDto.getId());
-        board.update(boardDto.getTitle(), boardDto.getContent());
+        board.update(boardDto);
         return boardMapper.toDto(board);
     }
 
