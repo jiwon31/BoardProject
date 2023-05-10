@@ -1,6 +1,6 @@
 package board.server.domain.user.service;
 
-import board.server.common.exception.UserNotFoundException;
+import board.server.common.util.CommonUtil;
 import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.entity.Board;
 import board.server.domain.board.mapper.BoardMapper;
@@ -25,6 +25,7 @@ public class UserService {
     private final BoardRepository boardRepository;
     private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
     private final BoardMapper boardMapper = Mappers.getMapper(BoardMapper.class);
+    private final CommonUtil commonUtil;
 
     /**
      * 사용자 정보 조회
@@ -32,7 +33,7 @@ public class UserService {
      * @param userId
      */
     public UserDto findUserInfo(Long userId) {
-        User user = findUser(userId);
+        User user = commonUtil.findUser(userId);
         return userMapper.toDto(user);
     }
 
@@ -42,16 +43,8 @@ public class UserService {
      * @param userId : 유저 식별자
      */
     public List<BoardDto> findMyBoardList(Long userId) {
-        User user = findUser(userId);
+        User user = commonUtil.findUser(userId);
         List<Board> boardList = boardRepository.findAllByUser(user);
         return boardMapper.toDtoList(boardList);
-    }
-
-    /**
-     * 특정 유저 검색
-     */
-    private User findUser(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
     }
 }

@@ -1,7 +1,5 @@
 package board.server.domain.user.service;
 
-import board.server.common.exception.DuplicateEmailException;
-import board.server.common.exception.DuplicateUserNameException;
 import board.server.common.jwt.TokenProvider;
 import board.server.domain.user.dto.TokenDto;
 import board.server.domain.user.dto.UserDto;
@@ -9,6 +7,7 @@ import board.server.domain.user.entitiy.RefreshToken;
 import board.server.domain.user.entitiy.User;
 import board.server.domain.user.repository.RefreshTokenRepository;
 import board.server.domain.user.repository.UserRepository;
+import board.server.domain.user.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,9 +23,10 @@ public class AuthService {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserUtil userUtil;
 
     /**
      * 회원가입
@@ -35,8 +35,8 @@ public class AuthService {
      */
     @Transactional
     public void signup(UserDto userDto) {
-        checkEmailDuplicate(userDto.getEmail()); // 이메일 중복 검사
-        checkUserNameDuplicate(userDto.getUserName()); // 닉네임 중복 검사
+        userUtil.checkEmailDuplicate(userDto.getEmail()); // 이메일 중복 검사
+        userUtil.checkUserNameDuplicate(userDto.getUserName()); // 닉네임 중복 검사
         User user = userDto.toEntity(passwordEncoder);
         userRepository.save(user);
     }
@@ -114,17 +114,5 @@ public class AuthService {
     @Transactional
     public void logout(Long userId) {
         refreshTokenRepository.deleteByKey(Long.toString(userId));
-    }
-
-    public void checkUserNameDuplicate(String userName) {
-        if (userRepository.existsByUserName(userName)) {
-            throw new DuplicateUserNameException(userName);
-        }
-    }
-
-    public void checkEmailDuplicate(String email) {
-        if (userRepository.existsByEmail(email)) {
-            throw new DuplicateEmailException(email);
-        }
     }
 }
