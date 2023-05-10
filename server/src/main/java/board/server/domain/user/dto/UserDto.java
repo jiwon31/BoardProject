@@ -10,8 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 public class UserDto {
 
-    private final Long id;
-
     private final String email;
 
     private final String password;
@@ -19,8 +17,7 @@ public class UserDto {
     private final String userName;
 
     @Builder
-    public UserDto(Long id, String email, String password, String userName) {
-        this.id = id;
+    public UserDto(String email, String password, String userName) {
         this.email = email;
         this.password = password;
         this.userName = userName;
