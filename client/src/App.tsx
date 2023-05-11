@@ -1,3 +1,11 @@
-export const App = () => {
-  return <h1>Hello</h1>;
-};
+import Header from "components/Header";
+import { Outlet } from "react-router-dom";
+
+export default function App() {
+  return (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  );
+}
