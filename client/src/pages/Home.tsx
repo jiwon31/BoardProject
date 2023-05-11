@@ -1,3 +1,5 @@
+import Boards from "components/Boards";
+
 export default function Home() {
-  return <div>Home</div>;
+  return <Boards />;
 }
