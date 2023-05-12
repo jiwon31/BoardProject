@@ -16,11 +16,9 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      useErrorBoundary: true,
       retry: false,
     },
     mutations: {
-      useErrorBoundary: true,
       retry: false,
     },
   },

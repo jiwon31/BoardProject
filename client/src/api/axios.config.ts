@@ -13,7 +13,7 @@ instance.interceptors.response.use(
   },
   (error) => {
     console.log("😵응답 에러", error.response);
-    return Promise.reject(error.response);
+    return Promise.reject(error.response.data);
   },
 );
 

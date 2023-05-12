@@ -1,7 +1,7 @@
 import { Button } from "components/ui/Button";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { LoginRequest } from "types/user";
+import { LoginRequest } from "types/auth";
 
 const initialLoginInfo: LoginRequest = {
   email: "",
@@ -45,7 +45,11 @@ export default function Login() {
             onChange={handleChange}
           />
         </div>
-        <Button text="로그인하기" type="submit" />
+        <Button
+          text="로그인하기"
+          disabled={Object.values(loginInfo).some((info) => !info)}
+          type="submit"
+        />
       </form>
       <Link to="/signup" className="border-b border-gray-950">
         회원가입

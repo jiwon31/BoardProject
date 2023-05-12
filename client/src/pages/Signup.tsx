@@ -1,6 +1,7 @@
 import { Button } from "components/ui/Button";
+import useUser from "hooks/useUser";
 import { useState } from "react";
-import { SignUpRequest } from "types/user";
+import { SignUpRequest } from "types/auth";
 
 const initialSignUpInfo: SignUpRequest = {
   email: "",
@@ -12,6 +13,13 @@ export default function Signup() {
   const [signUpinfo, setSignUpInfo] =
     useState<SignUpRequest>(initialSignUpInfo);
   // const [disabled, setDisabled] = useState<boolean>(true);
+  const [emailDuplicateMessage, setEmailDuplicateMessage] = useState<
+    string | null
+  >(null);
+  const [nameDuplicateMessage, setNameDuplicateMessage] = useState<
+    string | null
+  >(null);
+  const { checkEmailDuplicate, checkUserNameDuplicate } = useUser();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,6 +28,25 @@ export default function Signup() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSignUpInfo((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckEmailDuplicate = () => {
+    checkEmailDuplicate.mutate(signUpinfo.email, {
+      onSuccess: (message) => {
+        setEmailDuplicateMessage(message);
+        setTimeout(() => setEmailDuplicateMessage(null), 3000);
+      },
+      onError: (error) => alert(error.message),
+    });
+  };
+
+  const handleCheckUserNameDuplicate = () => {
+    checkUserNameDuplicate.mutate(signUpinfo.userName, {
+      onSuccess: (message) => {
+        setNameDuplicateMessage(message);
+        setTimeout(() => setNameDuplicateMessage(null), 3000);
+      },
+    });
   };
 
   return (
@@ -40,8 +67,17 @@ export default function Signup() {
               required
               onChange={handleChange}
             />
-            <Button text="중복 확인" disabled={!signUpinfo.email} />
+            <Button
+              text="중복 확인"
+              disabled={!signUpinfo.email}
+              onClick={handleCheckEmailDuplicate}
+            />
           </div>
+          {emailDuplicateMessage && (
+            <p className="pb-1 text-sm text-green-500">
+              {emailDuplicateMessage}
+            </p>
+          )}
           <input
             type="password"
             name="password"
@@ -60,8 +96,17 @@ export default function Signup() {
               required
               onChange={handleChange}
             />
-            <Button text="중복 확인" disabled={!signUpinfo.userName} />
+            <Button
+              text="중복 확인"
+              disabled={!signUpinfo.userName}
+              onClick={handleCheckUserNameDuplicate}
+            />
           </div>
+          {nameDuplicateMessage && (
+            <p className="pb-1 text-sm text-green-500">
+              {nameDuplicateMessage}
+            </p>
+          )}
         </div>
         <Button
           text="회원가입하기"
