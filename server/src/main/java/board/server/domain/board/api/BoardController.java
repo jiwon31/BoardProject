@@ -86,7 +86,7 @@ public class BoardController {
     public ResponseEntity<List<GetBoardListResponse>> getBoardList(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String content,
-            @PageableDefault(size = 16, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         List<BoardDto> boardList = boardSearchService.getBoardListBySearchConditions(title, content, pageable);
         return ResponseEntity.ok(boardList.stream().map(dtoMapper::toGetListResponse).collect(Collectors.toList()));
