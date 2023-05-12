@@ -28,8 +28,7 @@ public class Board extends BaseTime {
     private String content;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
     @Column(name = "del_yn")

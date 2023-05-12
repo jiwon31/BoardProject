@@ -28,8 +28,4 @@ public class RefreshToken extends BaseTime {
         this.key = key;
         this.token = token;
     }
-
-    public void updateRefreshToken(String refreshToken) {
-        this.token = refreshToken;
-    }
 }
