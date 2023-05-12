@@ -14,12 +14,12 @@ export default function BoardItem({
     <div>
       {!isDeleted ? (
         <li
-          className="py-4 border-b border-gray-300 cursor-pointer"
+          className="py-5 border-b border-gray-300 cursor-pointer"
           onClick={() => navigate(`boards/${id}`)}
         >
           <div>
-            <h2 className="font-bold mb-1">{title}</h2>
-            <p className="text-xs text-zinc-400 line-clamp-3">{content}</p>
+            <h2 className="text-lg font-bold mb-2">{title}</h2>
+            <p className="text-sm text-zinc-400 line-clamp-3">{content}</p>
           </div>
           <div className="mt-2.5">
             <p className="text-sm">{userName}</p>
