@@ -26,3 +26,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+input {
+  @apply p-2.5 border border-gray-300 outline-brand;
+}
