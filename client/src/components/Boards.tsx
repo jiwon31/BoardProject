@@ -7,11 +7,13 @@ export default function Boards() {
   } = useBoard();
 
   return (
-    <section className="flex flex-col gap-y-6 p-6 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold">게시글 목록</h1>
+    <section className="flex flex-col p-6 max-w-5xl mx-auto">
+      <h1 className="text-2xl font-bold pb-6 border-b-2 border-brand">
+        게시글 목록
+      </h1>
       {isLoading && <p>Loading...</p>}
       {error && <p>Something is wrong 😣</p>}
-      <ul className="flex flex-col gap-y-2 border-t-2 border-brand">
+      <ul className="flex flex-col gap-y-2">
         {boards &&
           boards.map((board) => <BoardItem key={board.id} board={board} />)}
       </ul>
