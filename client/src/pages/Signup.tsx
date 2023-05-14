@@ -1,6 +1,8 @@
 import { Button } from "components/ui/Button";
+import useAuth from "hooks/useAuth";
 import useUser from "hooks/useUser";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { SignUpRequest } from "types/auth";
 
 const initialSignUpInfo: SignUpRequest = {
@@ -12,40 +14,67 @@ const initialSignUpInfo: SignUpRequest = {
 export default function Signup() {
   const [signUpinfo, setSignUpInfo] =
     useState<SignUpRequest>(initialSignUpInfo);
-  // const [disabled, setDisabled] = useState<boolean>(true);
-  const [emailDuplicateMessage, setEmailDuplicateMessage] = useState<
-    string | null
-  >(null);
-  const [nameDuplicateMessage, setNameDuplicateMessage] = useState<
-    string | null
-  >(null);
+  const [isEmailDuplicated, setIsEmailDuplicated] = useState<boolean>();
+  const [emailDuplicateMessage, setEmailDuplicateMessage] = useState<string>();
+  const [isNameDuplicated, setIsNameDuplicated] = useState<boolean>();
+  const [nameDuplicateMessage, setNameDuplicateMessage] = useState<string>();
+  const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
+  const isSignUpButtonDisabled =
+    isEmailDuplicated === false &&
+    isValidPassword === true &&
+    isNameDuplicated === false;
+
   const { checkEmailDuplicate, checkUserNameDuplicate } = useUser();
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    signUp.mutate(signUpinfo, {
+      onSuccess: (message) => {
+        alert(message);
+        navigate("/login");
+      },
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSignUpInfo((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "password") {
+      const regExp = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[$@$!%*#?&]).{8,}$/;
+      setIsValidPassword(regExp.test(value));
+    }
   };
 
   const handleCheckEmailDuplicate = () => {
     checkEmailDuplicate.mutate(signUpinfo.email, {
       onSuccess: (message) => {
+        setIsEmailDuplicated(false);
         setEmailDuplicateMessage(message);
-        setTimeout(() => setEmailDuplicateMessage(null), 3000);
       },
-      onError: (error) => alert(error.message),
+      onError: (error) => {
+        setIsEmailDuplicated(true);
+        setEmailDuplicateMessage(error.message);
+      },
+      onSettled: () =>
+        setTimeout(() => setEmailDuplicateMessage(undefined), 3000),
     });
   };
 
   const handleCheckUserNameDuplicate = () => {
     checkUserNameDuplicate.mutate(signUpinfo.userName, {
       onSuccess: (message) => {
+        setIsNameDuplicated(false);
         setNameDuplicateMessage(message);
-        setTimeout(() => setNameDuplicateMessage(null), 3000);
       },
+      onError: (error) => {
+        setIsNameDuplicated(true);
+        setNameDuplicateMessage(error.message);
+      },
+      onSettled: () =>
+        setTimeout(() => setNameDuplicateMessage(undefined), 3000),
     });
   };
 
@@ -74,7 +103,11 @@ export default function Signup() {
             />
           </div>
           {emailDuplicateMessage && (
-            <p className="pb-1 text-sm text-green-500">
+            <p
+              className={`${
+                isEmailDuplicated ? "text-red-500" : "text-green-500"
+              } text-sm`}
+            >
               {emailDuplicateMessage}
             </p>
           )}
@@ -86,6 +119,12 @@ export default function Signup() {
             required
             onChange={handleChange}
           />
+          {signUpinfo.password && !isValidPassword && (
+            <p className="text-sm text-red-500">
+              비밀번호는 최소 8자리에 숫자, 문자, 특수문자가 각 1개 이상
+              포함되어야 합니다.
+            </p>
+          )}
           <div className="flex justify-between">
             <input
               className="flex-1 mr-0.5"
@@ -103,14 +142,18 @@ export default function Signup() {
             />
           </div>
           {nameDuplicateMessage && (
-            <p className="pb-1 text-sm text-green-500">
+            <p
+              className={`${
+                isNameDuplicated ? "text-red-500" : "text-green-500"
+              } text-sm`}
+            >
               {nameDuplicateMessage}
             </p>
           )}
         </div>
         <Button
           text="회원가입하기"
-          disabled={Object.values(signUpinfo).some((info) => !info)}
+          disabled={!isSignUpButtonDisabled}
           type="submit"
         />
       </form>

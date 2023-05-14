@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const instance = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: "http://localhost:5000",
   timeout: 30000,
   headers: { "Content-Type": "application/json" },
 });
@@ -14,7 +14,7 @@ instance.interceptors.response.use(
   (error) => {
     console.log("😵응답 에러", error.response);
     return Promise.reject(error.response.data);
-  },
+  }
 );
 
 export default axios;
