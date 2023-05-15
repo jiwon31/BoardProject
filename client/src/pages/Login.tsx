@@ -1,6 +1,7 @@
 import { Button } from "components/ui/Button";
+import useAuth from "hooks/useAuth";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LoginRequest } from "types/auth";
 
 const initialLoginInfo: LoginRequest = {
@@ -10,9 +11,15 @@ const initialLoginInfo: LoginRequest = {
 
 export default function Login() {
   const [loginInfo, setLoginInfo] = useState<LoginRequest>(initialLoginInfo);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    login.mutate(loginInfo, {
+      onSuccess: () => navigate("/"),
+      onError: (error) => alert(error.message),
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +56,7 @@ export default function Login() {
           text="로그인하기"
           disabled={Object.values(loginInfo).some((info) => !info)}
           type="submit"
+          isLoading={login.isLoading}
         />
       </form>
       <Link to="/signup" className="border-b border-gray-950">
