@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "hooks/useAuth";
 
-export default function UserInfo({ user }: { user: User }) {
+export default function Avartar({ user }: { user: User }) {
   const [isDropdown, setIsDropdown] = useState<boolean>(false);
   const { logout } = useAuth();
   const navigate = useNavigate();

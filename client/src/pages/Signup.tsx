@@ -129,7 +129,6 @@ export default function Signup() {
           <div className="flex justify-between">
             <input
               className="flex-1 mr-0.5"
-              type="userName"
               name="userName"
               value={signUpinfo.userName}
               placeholder="닉네임을 입력하세요"

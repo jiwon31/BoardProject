@@ -1,4 +1,4 @@
-import { User } from 'types/user';
+import { User, UpdateUserRequest } from 'types/user';
 import { instance } from './axios.config';
 
 export default class UserApi {
@@ -7,7 +7,7 @@ export default class UserApi {
         return response.data;
     }
 
-    async updateUserInfo(data: User) {
+    async updateUserInfo(data: UpdateUserRequest) {
         const response = await instance.put<User>("/users/info", data);
         return response.data;
     }

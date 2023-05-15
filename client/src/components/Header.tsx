@@ -3,7 +3,7 @@ import { BsClipboard2Heart } from "react-icons/bs";
 import { Button } from "./ui/Button";
 import SearchInput from "./SearchInput";
 import useRecoilUser from "hooks/useRecoilUser";
-import UserInfo from "./UserInfo";
+import Avartar from "./Avartar";
 
 export default function Header() {
   const { user } = useRecoilUser();
@@ -20,7 +20,7 @@ export default function Header() {
           <Button text="Login" />
         </Link>
       ) : (
-        <UserInfo user={user} />
+        <Avartar user={user} />
       )}
     </header>
   );
