@@ -10,15 +10,12 @@ export default class AuthApi {
   }
 
   async login(data: LoginRequest) {
-    instance.defaults.withCredentials = true; // refreshToken을 쿠키로 받기 위해 설정
-    const response = await instance.post<Token>("/auth/login", data);
+    const response = await instance.post<Token>("/auth/login", data);    
     this.onLoginSuccess(response.data.accessToken);
   }
 
   async reissue() {
-    const response = await instance.post<Token>("/auth/reissue", {
-      withCredentials: true,
-    });
+    const response = await instance.post<Token>("/auth/reissue");
     this.onLoginSuccess(response.data.accessToken);
   }
 
