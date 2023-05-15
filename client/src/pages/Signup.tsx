@@ -35,6 +35,7 @@ export default function Signup() {
         alert(message);
         navigate("/login");
       },
+      onError: (error) => alert(error.message),
     });
   };
 
