@@ -99,8 +99,8 @@ export default function Signup() {
             />
             <Button
               text="중복 확인"
-              disabled={!signUpinfo.email}
               onClick={handleCheckEmailDuplicate}
+              disabled={!signUpinfo.email}
             />
           </div>
           {emailDuplicateMessage && (
@@ -138,8 +138,8 @@ export default function Signup() {
             />
             <Button
               text="중복 확인"
-              disabled={!signUpinfo.userName}
               onClick={handleCheckUserNameDuplicate}
+              disabled={!signUpinfo.userName}
             />
           </div>
           {nameDuplicateMessage && (
@@ -156,6 +156,7 @@ export default function Signup() {
           text="회원가입하기"
           disabled={!isSignUpButtonDisabled}
           type="submit"
+          isLoading={signUp.isLoading}
         />
       </form>
     </section>

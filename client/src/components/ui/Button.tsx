@@ -25,7 +25,7 @@ export const Button = ({
       {isLoading && (
         <CgSpinner className="animate-spin inline-block w-6 h-6 mr-2" />
       )}
-      {text}
+      {!isLoading && text}
     </button>
   );
 };
