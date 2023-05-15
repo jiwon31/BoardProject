@@ -23,7 +23,8 @@ export default class AuthApi {
   }
 
   async logout() {
-    return instance.post<void>("/auth/logout");
+    await instance.post<void>("/auth/logout");
+    delete instance.defaults.headers.common['Authorization'];
   }
 
   private onLoginSuccess(accessToken: string) {

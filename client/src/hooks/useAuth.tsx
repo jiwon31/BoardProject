@@ -24,5 +24,9 @@ export default function useAuth(
     }
   );
 
-  return { signUp, login };
+  const logout = useMutation<void, Error>(authApi.logout, {
+    onSuccess: () => setUser(null),
+  });
+
+  return { signUp, login, logout };
 }
