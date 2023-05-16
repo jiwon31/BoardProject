@@ -9,7 +9,12 @@ export default function useUser(userApi = new UserApi()) {
   const updateUserInfo = useMutation<User, Error, UpdateUserRequest>(
     (data) => userApi.updateUserInfo(data),
     {
-      onSuccess: (data) => setUser(data),
+      onSuccess: (data) =>
+        setUser((prev) => ({
+          ...prev!,
+          email: data.email,
+          userName: data.userName,
+        })),
     }
   );
 
@@ -21,5 +26,9 @@ export default function useUser(userApi = new UserApi()) {
     (userName) => userApi.checkUserNameDuplicate(userName)
   );
 
-  return { updateUserInfo, checkEmailDuplicate, checkUserNameDuplicate };
+  return {
+    updateUserInfo,
+    checkEmailDuplicate,
+    checkUserNameDuplicate,
+  };
 }
