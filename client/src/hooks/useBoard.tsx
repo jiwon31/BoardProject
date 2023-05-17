@@ -17,8 +17,11 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
     { staleTime: 1000 * 60 * 5, enabled: !!boardId }
   );
 
-  const createBoard = useMutation<{ id: number }, Error, BoardRequest>((data) =>
-    boardApi.createBoard(data)
+  const createBoard = useMutation<{ id: number }, Error, BoardRequest>(
+    (data) => boardApi.createBoard(data),
+    {
+      onSuccess: () => queryClient.invalidateQueries(["boards"]),
+    }
   );
 
   return { boardQuery, singleBoardQuery, createBoard };
