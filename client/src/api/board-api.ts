@@ -13,7 +13,8 @@ export default class BoardApi {
   }
 
   async deleteBoard(boardId: number) {
-    return instance.patch<void>(`/boards/${boardId}`);
+    const response = await instance.patch<void>(`/boards/${boardId}`);
+    return response.data;
   }
 
   async getSingleBoard(boardId: number) {

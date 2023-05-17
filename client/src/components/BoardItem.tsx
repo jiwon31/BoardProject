@@ -27,7 +27,7 @@ export default function BoardItem({
           </div>
         </li>
       ) : (
-        <li className="py-6 border-b border-gray-300">삭제된 게시글 입니다.</li>
+        <li className="py-6 border-b border-gray-300">삭제된 게시글입니다.</li>
       )}
     </div>
   );

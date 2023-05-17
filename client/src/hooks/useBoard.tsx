@@ -19,10 +19,18 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
 
   const createBoard = useMutation<{ id: number }, Error, BoardRequest>(
     (data) => boardApi.createBoard(data),
+    { onSuccess: () => queryClient.invalidateQueries(["boards"]) }
+  );
+
+  const deleteBoard = useMutation<void, Error, number>(
+    (id) => boardApi.deleteBoard(id),
     {
-      onSuccess: () => queryClient.invalidateQueries(["boards"]),
+      onSuccess: () => {
+        queryClient.invalidateQueries(["boards", boardId]);
+        queryClient.invalidateQueries(["boards"]);
+      },
     }
   );
 
-  return { boardQuery, singleBoardQuery, createBoard };
+  return { boardQuery, singleBoardQuery, createBoard, deleteBoard };
 }

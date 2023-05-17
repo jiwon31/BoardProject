@@ -8,17 +8,25 @@ import { formatDate } from "util/formatDate";
 
 export default function BoardDetail() {
   const { id } = useParams();
+  const boardId = parseInt(id!);
   const {
     singleBoardQuery: { isLoading, error, data: board },
-  } = useBoard(parseInt(id!));
+    deleteBoard,
+  } = useBoard(boardId);
   const { user } = useRecoilUser();
   const [isDropdown, setIsDropdown] = useState<boolean>(false);
+
+  const handleDelete = () => {
+    deleteBoard.mutate(boardId, {
+      onError: (error) => alert(error.message),
+    });
+  };
 
   return (
     <section className="py-10 max-w-5xl mx-auto">
       {isLoading && <p>Loading...</p>}
       {error && <p>Something is wrong 😣</p>}
-      {board && (
+      {board && !board.isDeleted ? (
         <div className="flex flex-col">
           <div className="flex flex-col gap-y-10">
             <h1 className="text-2xl font-bold">{board.title}</h1>
@@ -42,7 +50,7 @@ export default function BoardDetail() {
                         <button>수정</button>
                       </div>
                       <div className="flex items-center px-8 py-2 m-1 mt-0 text-red-500 whitespace-nowrap">
-                        <button>삭제</button>
+                        <button onClick={handleDelete}>삭제</button>
                       </div>
                     </div>
                   )}
@@ -54,6 +62,8 @@ export default function BoardDetail() {
             <pre className="whitespace-pre-wrap font-sans">{board.content}</pre>
           </div>
         </div>
+      ) : (
+        <div className="flex justify-center text-lg">삭제된 게시글입니다.</div>
       )}
     </section>
   );
