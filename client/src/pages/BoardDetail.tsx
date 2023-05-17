@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useBoard from "hooks/useBoard";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { RxDotsVertical } from "react-icons/rx";
 import useRecoilUser from "hooks/useRecoilUser";
@@ -15,6 +15,9 @@ export default function BoardDetail() {
   } = useBoard(boardId);
   const { user } = useRecoilUser();
   const [isDropdown, setIsDropdown] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const handleUpdate = () => navigate(`/boards/update/${boardId}`);
 
   const handleDelete = () => {
     deleteBoard.mutate(boardId, {
@@ -47,7 +50,7 @@ export default function BoardDetail() {
                   {isDropdown && (
                     <div className="absolute top-6 right-0 flex flex-col items-center border border-gray-300 bg-white">
                       <div className="flex items-center px-8 py-2 m-1 whitespace-nowrap border-b border-gray-300">
-                        <button>수정</button>
+                        <button onClick={handleUpdate}>수정</button>
                       </div>
                       <div className="flex items-center px-8 py-2 m-1 mt-0 text-red-500 whitespace-nowrap">
                         <button onClick={handleDelete}>삭제</button>

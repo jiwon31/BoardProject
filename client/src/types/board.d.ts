@@ -1,6 +1,11 @@
-export type BoardRequest = {
+export type BoardContent = {
     title: string;
     content: string;
+}
+
+export type UpdateBoardRequest = {
+	id: number;
+	info: BoardContent;
 }
 
 export type Board = {

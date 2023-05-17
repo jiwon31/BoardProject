@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import BoardApi from "api/board-api";
-import { Board, BoardRequest } from "types/board";
+import { Board, BoardContent, UpdateBoardRequest } from "types/board";
+import useRecoilUser from "./useRecoilUser";
 
 export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
+  const { user } = useRecoilUser();
   const queryClient = useQueryClient();
 
   const boardQuery = useQuery<Board[], Error>(
@@ -14,12 +16,25 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
   const singleBoardQuery = useQuery<Board, Error>(
     ["boards", boardId],
     () => boardApi.getSingleBoard(boardId!),
-    { staleTime: 1000 * 60 * 5, enabled: !!boardId }
+    {
+      staleTime: 1000 * 60 * 5,
+      enabled: !!boardId && !!user,
+    }
   );
 
-  const createBoard = useMutation<{ id: number }, Error, BoardRequest>(
+  const createBoard = useMutation<{ id: number }, Error, BoardContent>(
     (data) => boardApi.createBoard(data),
     { onSuccess: () => queryClient.invalidateQueries(["boards"]) }
+  );
+
+  const updateBoard = useMutation<Board, Error, UpdateBoardRequest>(
+    (data) => boardApi.updateBoard(data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["boards", boardId]);
+        queryClient.invalidateQueries(["boards"]);
+      },
+    }
   );
 
   const deleteBoard = useMutation<void, Error, number>(
@@ -32,5 +47,11 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
     }
   );
 
-  return { boardQuery, singleBoardQuery, createBoard, deleteBoard };
+  return {
+    boardQuery,
+    singleBoardQuery,
+    createBoard,
+    updateBoard,
+    deleteBoard,
+  };
 }

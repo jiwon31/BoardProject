@@ -54,8 +54,6 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/users/email/exists").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/username/exists").permitAll()
                 .antMatchers(HttpMethod.GET, "/boards").permitAll()
-                .antMatchers(HttpMethod.GET, "/boards/{boardId}").permitAll()
-                .antMatchers(HttpMethod.GET, "/boards/{boardId}/comments").permitAll()
                 .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));

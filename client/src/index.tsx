@@ -11,6 +11,7 @@ import Signup from "pages/Signup";
 import Mypage from "pages/Mypage";
 import NewBoard from "pages/NewBoard";
 import BoardDetail from "pages/BoardDetail";
+import UpdateBoard from "pages/UpdateBoard";
 import NotFound from "pages/NotFound";
 import PrivateRoute from "pages/Routes/PrivateRoute";
 import PublicRoute from "pages/Routes/PublicRoute";
@@ -70,6 +71,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <BoardDetail />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/boards/update/:id",
+        element: (
+          <PrivateRoute>
+            <UpdateBoard />
           </PrivateRoute>
         ),
       },

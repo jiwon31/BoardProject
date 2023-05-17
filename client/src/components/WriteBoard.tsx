@@ -1,25 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "./ui/Button";
-import { BoardRequest } from "types/board";
+import { BoardContent } from "types/board";
 import useBoard from "hooks/useBoard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const initialBoardInfo = {
   title: "",
   content: "",
 };
 
-export default function WriteBoard() {
-  const [boardInfo, setBoardInfo] = useState<BoardRequest>(initialBoardInfo);
-  const { createBoard } = useBoard();
+export default function WriteBoard({ text }: { text: string }) {
+  const { id } = useParams();
+  const boardId = parseInt(id!);
+  const {
+    singleBoardQuery: { data: board },
+    createBoard,
+    updateBoard,
+  } = useBoard(boardId);
+  const [boardInfo, setBoardInfo] = useState<BoardContent>(initialBoardInfo);
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createBoard.mutate(boardInfo, {
-      onSuccess: (data) => navigate(`/boards/${data.id}`),
-      onError: (error) => alert(error.message),
-    });
+    if (!boardId) {
+      createBoard.mutate(boardInfo, {
+        onSuccess: (data) => navigate(`/boards/${data.id}`),
+        onError: (error) => alert(error.message),
+      });
+    } else {
+      updateBoard.mutate(
+        { id: boardId, info: boardInfo },
+        {
+          onSuccess: () => navigate(`/boards/${boardId}`),
+          onError: (error) => alert(error.message),
+        }
+      );
+    }
   };
 
   const handleChange = (
@@ -29,6 +45,17 @@ export default function WriteBoard() {
     setBoardInfo((prev) => ({ ...prev, [name]: value }));
   };
 
+  /** 새로고침 대응 */
+  useEffect(() => {
+    if (board) {
+      setBoardInfo((prev) => ({
+        ...prev,
+        title: board.title,
+        content: board.content,
+      }));
+    }
+  }, [board]);
+
   return (
     <section className="py-10 max-w-5xl mx-auto h-screen">
       <form
@@ -36,7 +63,7 @@ export default function WriteBoard() {
         onSubmit={handleSubmit}
       >
         <div className="flex justify-between items-center pb-5 border-b border-gray-200">
-          <h1 className="text-2xl font-bold">글쓰기</h1>
+          <h1 className="text-2xl font-bold">{text}</h1>
           <Button
             text="완료"
             type="submit"
