@@ -44,7 +44,7 @@ export default function Profile() {
   }, [user]);
 
   return (
-    <section className="py-10 max-w-5xl mx-auto">
+    <section className="ml-1 flex-1">
       <h1 className="text-2xl font-bold pb-5 mb-5 border-b-2 border-gray-200">
         프로필 수정
       </h1>

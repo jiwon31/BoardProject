@@ -27,7 +27,7 @@ export default function Avartar({ user }: { user: User }) {
       {isDropdown && (
         <div className="absolute top-10 flex flex-col items-center bg-zinc-100 rounded-md">
           <div className="flex items-center px-5 py-2 m-1 whitespace-nowrap rounded-md hover:bg-brand hover:text-white">
-            <Link to="/mypage">마이페이지</Link>
+            <Link to="/mypage/profile">마이페이지</Link>
           </div>
           <div
             className="flex items-center px-7 py-2 m-1 whitespace-nowrap rounded-md hover:bg-brand hover:text-white"
