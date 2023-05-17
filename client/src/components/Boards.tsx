@@ -1,5 +1,5 @@
-import useBoard from "hooks/useBoard";
 import BoardItem from "./BoardItem";
+import useBoard from "hooks/useBoard";
 
 export default function Boards() {
   const {
