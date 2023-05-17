@@ -13,6 +13,7 @@ import WriteBoard from "pages/WriteBoard";
 import BoardDetail from "pages/BoardDetail";
 import NotFound from "pages/NotFound";
 import PrivateRoute from "pages/Routes/PrivateRoute";
+import PublicRoute from "pages/Routes/PublicRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,8 +33,22 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, path: "/", element: <Home /> },
-      { path: "/login", element: <Login /> },
-      { path: "/signup", element: <Signup /> },
+      {
+        path: "/login",
+        element: (
+          <PublicRoute restricted>
+            <Login />
+          </PublicRoute>
+        ),
+      },
+      {
+        path: "/signup",
+        element: (
+          <PublicRoute restricted>
+            <Signup />
+          </PublicRoute>
+        ),
+      },
       {
         path: "/mypage",
         element: (
