@@ -1,6 +1,6 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import BoardApi from "api/board-api";
-import { Board } from "types/board";
+import { Board, BoardRequest } from "types/board";
 
 export default function useBoard(boardApi = new BoardApi()) {
   const queryClient = useQueryClient();
@@ -11,5 +11,9 @@ export default function useBoard(boardApi = new BoardApi()) {
     { staleTime: 1000 * 60 }
   );
 
-  return { boardQuery };
+  const createBoard = useMutation<{ id: number }, Error, BoardRequest>((data) =>
+    boardApi.createBoard(data)
+  );
+
+  return { boardQuery, createBoard };
 }

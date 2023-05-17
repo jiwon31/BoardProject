@@ -9,7 +9,7 @@ import Home from "pages/Home";
 import Login from "pages/Login";
 import Signup from "pages/Signup";
 import Mypage from "pages/Mypage";
-import WriteBoard from "pages/WriteBoard";
+import NewBoard from "pages/NewBoard";
 import BoardDetail from "pages/BoardDetail";
 import NotFound from "pages/NotFound";
 import PrivateRoute from "pages/Routes/PrivateRoute";
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
         path: "/boards/new",
         element: (
           <PrivateRoute>
-            <WriteBoard />
+            <NewBoard />
           </PrivateRoute>
         ),
       },

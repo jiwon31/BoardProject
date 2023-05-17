@@ -3,7 +3,7 @@ import { instance } from "./axios.config";
 
 export default class BoardApi {
   async createBoard(data: BoardRequest) {
-    const response = await instance.post<number>("/boards", data);
+    const response = await instance.post<{id: number}>("/boards", data);
     return response.data;
   }
 

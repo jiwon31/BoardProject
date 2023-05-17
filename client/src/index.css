@@ -27,6 +27,6 @@ code {
     monospace;
 }
 
-input {
+input, textarea {
   @apply p-2.5 border border-gray-300 outline-brand;
 }

@@ -29,6 +29,6 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src", "**/*.ts"],
+  "include": ["src", "**/*.{ts, tsx}"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
