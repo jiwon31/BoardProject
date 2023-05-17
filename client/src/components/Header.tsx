@@ -15,13 +15,20 @@ export default function Header() {
         <h1 className="ml-1 font-bold">Board</h1>
       </Link>
       <SearchInput />
-      {!user ? (
-        <Link to="/login">
-          <Button text="Login" />
-        </Link>
-      ) : (
-        <Avartar user={user} />
-      )}
+      <div className="flex items-center gap-x-2">
+        {user && (
+          <Link to="/boards/new">
+            <Button text="글쓰기" />
+          </Link>
+        )}
+        {!user ? (
+          <Link to="/login">
+            <Button text="Login" />
+          </Link>
+        ) : (
+          <Avartar user={user} />
+        )}
+      </div>
     </header>
   );
 }
