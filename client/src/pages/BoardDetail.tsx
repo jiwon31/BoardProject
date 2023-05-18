@@ -6,7 +6,7 @@ import { RxDotsVertical } from "react-icons/rx";
 import useRecoilUser from "hooks/useRecoilUser";
 import { formatDate } from "util/formatDate";
 import { FaRegCommentDots } from "react-icons/fa";
-import CommentInput from "components/comment/CommentInput";
+import CommentContainer from "components/comment/CommentContainer";
 
 export default function BoardDetail() {
   const { id } = useParams();
@@ -72,14 +72,16 @@ export default function BoardDetail() {
               </pre>
             </div>
           </div>
-          <button
-            className="flex items-center gap-x-1 px-2 py-1 border border-gray-300"
-            onClick={() => setToggleComment((prev) => !prev)}
-          >
-            <FaRegCommentDots />
-            <span>댓글</span>
-          </button>
-          {toggleComment && <CommentInput boardId={boardId} />}
+          <div className="mb-8">
+            <button
+              className="flex items-center gap-x-1 px-2 py-1 border border-gray-300"
+              onClick={() => setToggleComment((prev) => !prev)}
+            >
+              <FaRegCommentDots />
+              <span>댓글</span>
+            </button>
+          </div>
+          {toggleComment && <CommentContainer boardId={boardId} />}
         </>
       ) : (
         <div className="flex justify-center text-lg">삭제된 게시글입니다.</div>

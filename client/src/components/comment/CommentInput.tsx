@@ -1,10 +1,18 @@
+import { UseMutationResult } from "@tanstack/react-query";
 import { Button } from "components/ui/Button";
-import useComment from "hooks/useComment";
 import { useState } from "react";
+import { CreateCommentRequest } from "types/comment";
 
-export default function CommentInput({ boardId }: { boardId: number }) {
+type CommentInputProps = {
+  boardId: number;
+  createComment: UseMutationResult<{ id: number }, Error, CreateCommentRequest>;
+};
+
+export default function CommentInput({
+  boardId,
+  createComment,
+}: CommentInputProps) {
   const [content, setContent] = useState<string>("");
-  const { createComment } = useComment();
 
   const handleSubmit = () =>
     createComment.mutate(

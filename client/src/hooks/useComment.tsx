@@ -1,16 +1,28 @@
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import CommentApi from "api/comment-api";
-import { CreateCommentRequest } from "types/comment";
+import { Comment, CreateCommentRequest } from "types/comment";
+import useRecoilUser from "./useRecoilUser";
 
-export default function useComment(commentApi = new CommentApi()) {
+export default function useComment(
+  boardId: number,
+  commentApi = new CommentApi()
+) {
+  const { user } = useRecoilUser();
   const queryClient = useQueryClient();
 
-  // TODO: 성공 후 댓글리스트 캐시 업데이트
+  const commentQuery = useQuery<Comment[], Error>(
+    ["comments", { boardId }],
+    () => commentApi.getCommentList(boardId),
+    { staleTime: 1000 * 60, enabled: !!user }
+  );
+
   const createComment = useMutation<
     { id: number },
     Error,
     CreateCommentRequest
-  >((data) => commentApi.createComment(data));
+  >((data) => commentApi.createComment(data), {
+    onSuccess: () => queryClient.invalidateQueries(["comments", { boardId }]),
+  });
 
-  return { createComment };
+  return { commentQuery, createComment };
 }
