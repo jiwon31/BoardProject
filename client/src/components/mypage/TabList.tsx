@@ -1,7 +1,6 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export default function TabList() {
-  const { tab } = useParams();
+export default function TabList({ tab }: { tab: string }) {
   const style =
     "w-full py-2.5 pl-2.5 pr-24 flex justify-start text-lg font-semibold hover:text-brand";
 

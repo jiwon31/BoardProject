@@ -15,7 +15,7 @@ export default function BoardItem({
       {!isDeleted ? (
         <li
           className="py-5 border-b border-gray-300 cursor-pointer"
-          onClick={() => navigate(`boards/${id}`)}
+          onClick={() => navigate(`/boards/${id}`)}
         >
           <div>
             <h2 className="text-lg font-bold mb-2">{title}</h2>
