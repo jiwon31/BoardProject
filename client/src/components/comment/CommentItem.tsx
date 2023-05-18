@@ -22,7 +22,7 @@ export default function CommentItem({
   const [isDropdown, setIsDropdown] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
-  const update = (content: string) =>
+  const handleUpdate = (content: string) =>
     updateComment.mutate(
       { commentId: id, content: { content } },
       {
@@ -73,7 +73,10 @@ export default function CommentItem({
               </div>
             </>
           ) : (
-            <CommentInput commentContent={content} handleSubmit={update} />
+            <CommentInput
+              commentContent={content}
+              handleSubmit={handleUpdate}
+            />
           )}
         </li>
       ) : (

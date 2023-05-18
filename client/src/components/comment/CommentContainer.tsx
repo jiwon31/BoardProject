@@ -10,7 +10,7 @@ export default function CommentContainer({ boardId }: { boardId: number }) {
     deleteComment,
   } = useComment(boardId);
 
-  const create = (content: string, update: (content: string) => void) =>
+  const handleCreate = (content: string, update: (content: string) => void) =>
     createComment.mutate(
       { boardId, content: { content } },
       {
@@ -28,7 +28,7 @@ export default function CommentContainer({ boardId }: { boardId: number }) {
         updateComment={updateComment}
         deleteComment={deleteComment}
       />
-      <CommentInput handleSubmit={create} />
+      <CommentInput handleSubmit={handleCreate} />
     </div>
   );
 }
