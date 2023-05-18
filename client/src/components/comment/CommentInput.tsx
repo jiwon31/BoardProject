@@ -1,27 +1,19 @@
-import { UseMutationResult } from "@tanstack/react-query";
 import { Button } from "components/ui/Button";
 import { useState } from "react";
-import { CreateCommentRequest } from "types/comment";
 
 type CommentInputProps = {
-  boardId: number;
-  createComment: UseMutationResult<{ id: number }, Error, CreateCommentRequest>;
+  commentContent?: string;
+  handleSubmit: (
+    content: string,
+    update: (content: string) => void | undefined
+  ) => void;
 };
 
 export default function CommentInput({
-  boardId,
-  createComment,
+  commentContent,
+  handleSubmit,
 }: CommentInputProps) {
-  const [content, setContent] = useState<string>("");
-
-  const handleSubmit = () =>
-    createComment.mutate(
-      { boardId, content: { content } },
-      {
-        onSuccess: () => setContent(""),
-        onError: (error) => alert(error.message),
-      }
-    );
+  const [content, setContent] = useState<string>(commentContent || "");
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setContent(e.target.value);
@@ -37,7 +29,11 @@ export default function CommentInput({
         onChange={handleChange}
       />
       <div className="flex flex-row justify-end">
-        <Button text="등록" disabled={!content} onClick={handleSubmit} />
+        <Button
+          text="등록"
+          disabled={!content}
+          onClick={() => handleSubmit(content, setContent)}
+        />
       </div>
     </div>
   );

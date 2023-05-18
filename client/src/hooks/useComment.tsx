@@ -1,6 +1,11 @@
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import CommentApi from "api/comment-api";
-import { Comment, CreateCommentRequest } from "types/comment";
+import {
+  Comment,
+  CommentContent,
+  CreateCommentRequest,
+  UpdateCommentRequest,
+} from "types/comment";
 import useRecoilUser from "./useRecoilUser";
 
 export default function useComment(
@@ -21,8 +26,25 @@ export default function useComment(
     Error,
     CreateCommentRequest
   >((data) => commentApi.createComment(data), {
-    onSuccess: () => queryClient.invalidateQueries(["comments", { boardId }]),
+    onSuccess: updateQueries,
   });
 
-  return { commentQuery, createComment };
+  const updateComment = useMutation<
+    CommentContent,
+    Error,
+    UpdateCommentRequest
+  >((data) => commentApi.updateComment(data), {
+    onSuccess: updateQueries,
+  });
+
+  const deleteComment = useMutation<void, Error, number>(
+    (commentId) => commentApi.deleteComment(commentId),
+    { onSuccess: updateQueries }
+  );
+
+  function updateQueries() {
+    queryClient.invalidateQueries(["comments", { boardId }]);
+  }
+
+  return { commentQuery, createComment, updateComment, deleteComment };
 }
