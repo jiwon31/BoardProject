@@ -31,6 +31,11 @@ export default function CommentItem({
       }
     );
 
+  const handleDelete = () =>
+    deleteComment.mutate(id, {
+      onError: (error) => alert(error.message),
+    });
+
   return (
     <div>
       {!isDeleted ? (
@@ -54,7 +59,7 @@ export default function CommentItem({
                       </button>
                     </div>
                     <div className="flex items-center px-3 py-2 m-1 mt-0 text-sm text-red-500 whitespace-nowrap">
-                      <button>삭제</button>
+                      <button onClick={handleDelete}>삭제</button>
                     </div>
                   </div>
                 )}
