@@ -26,6 +26,6 @@ export default class AuthApi {
 
   private onLoginSuccess(accessToken: string) {
     instance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-    setTimeout(this.reissue, AuthApi.JWT_EXPIRY_TIME - 60000); // 토큰 만료되기 1분 전에 새로운 토큰 발급 요청
+    setTimeout(() => this.reissue(), AuthApi.JWT_EXPIRY_TIME - 60000); // 토큰 만료되기 1분 전에 새로운 토큰 발급 요청
   }
 }
