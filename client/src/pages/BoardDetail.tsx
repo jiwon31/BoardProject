@@ -33,7 +33,7 @@ export default function BoardDetail() {
     <section className="py-10 max-w-5xl mx-auto">
       {isLoading && <p>Loading...</p>}
       {error && <p>Something is wrong 😣</p>}
-      {board && !board.isDeleted ? (
+      {board && !board.isDeleted && (
         <>
           <div className="flex flex-col mb-20">
             <div className="flex flex-col gap-y-10">
@@ -83,7 +83,8 @@ export default function BoardDetail() {
           </div>
           {toggleComment && <CommentContainer boardId={boardId} />}
         </>
-      ) : (
+      )}
+      {board && board.isDeleted && (
         <div className="flex justify-center text-lg">삭제된 게시글입니다.</div>
       )}
     </section>
