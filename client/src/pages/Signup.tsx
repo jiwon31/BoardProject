@@ -19,9 +19,12 @@ export default function Signup() {
   const [isNameDuplicated, setIsNameDuplicated] = useState<boolean>();
   const [nameDuplicateMessage, setNameDuplicateMessage] = useState<string>();
   const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
+  const [passwordConfirmation, setPasswordConfirmation] = useState<string>();
+  const [isPasswordMatch, setIsPasswordMatch] = useState<boolean>(false);
   const isSignUpButtonDisabled =
     isEmailDuplicated === false &&
     isValidPassword === true &&
+    isPasswordMatch === true &&
     isNameDuplicated === false;
 
   const { checkEmailDuplicate, checkUserNameDuplicate } = useUser();
@@ -41,12 +44,16 @@ export default function Signup() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setSignUpInfo((prev) => ({ ...prev, [name]: value }));
-
-    if (name === "password") {
+    if (name === "passwordConfirmation") {
+      setIsPasswordMatch(signUpinfo.password === value);
+      setPasswordConfirmation(value);
+    } else if (name === "password") {
+      setSignUpInfo((prev) => ({ ...prev, [name]: value }));
       const regExp = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[$@$!%*#?&]).{8,}$/;
       setIsValidPassword(regExp.test(value));
     }
+
+    setSignUpInfo((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCheckEmailDuplicate = () => {
@@ -124,6 +131,18 @@ export default function Signup() {
             <p className="text-sm text-red-500">
               비밀번호는 최소 8자리에 숫자, 문자, 특수문자가 각 1개 이상
               포함되어야 합니다.
+            </p>
+          )}
+          <input
+            type="password"
+            name="passwordConfirmation"
+            placeholder="비밀번호를 한 번 더 입력하세요"
+            required
+            onChange={handleChange}
+          />
+          {passwordConfirmation && !isPasswordMatch && (
+            <p className="text-sm text-red-500">
+              비밀번호가 일치하지 않습니다.
             </p>
           )}
           <div className="flex justify-between">
