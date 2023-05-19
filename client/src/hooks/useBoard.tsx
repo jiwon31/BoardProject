@@ -3,15 +3,17 @@ import BoardApi from "api/board-api";
 import { Board, BoardContent, UpdateBoardRequest } from "types/board";
 import useRecoilUser from "./useRecoilUser";
 import { useLocation } from "react-router-dom";
+import useSearch from "./useSearch";
 
 export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
   const { user } = useRecoilUser();
-  const queryClient = useQueryClient();
   const { pathname } = useLocation();
+  const { searchParams } = useSearch();
+  const queryClient = useQueryClient();
 
   const boardQuery = useQuery<Board[], Error>(
     ["boards"],
-    boardApi.getBoardList,
+    () => boardApi.getBoardList(searchParams),
     { staleTime: 1000 * 60, enabled: pathname === "/" }
   );
 

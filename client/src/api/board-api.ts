@@ -23,8 +23,10 @@ export default class BoardApi {
   }
 
   // TODO: 파라미터 & 페이징
-  async getBoardList() {
-    const response = await instance.get<Board[]>("/boards");
+  async getBoardList(searchParams?: URLSearchParams) {
+    const response = await instance.get<Board[]>("/boards", {
+      params: searchParams
+    });
     return response.data;
   }
 }

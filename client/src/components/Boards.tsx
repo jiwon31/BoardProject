@@ -1,10 +1,17 @@
+import { useEffect } from "react";
 import BoardItem from "./BoardItem";
 import useBoard from "hooks/useBoard";
+import useSearch from "hooks/useSearch";
 
 export default function Boards() {
+  const { searchParams } = useSearch();
   const {
-    boardQuery: { isLoading, error, data: boards },
+    boardQuery: { isLoading, error, data: boards, refetch },
   } = useBoard();
+
+  useEffect(() => {
+    refetch();
+  }, [searchParams, refetch]);
 
   return (
     <section className="flex flex-col py-10 max-w-5xl mx-auto">
