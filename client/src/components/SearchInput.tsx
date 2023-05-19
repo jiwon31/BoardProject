@@ -17,11 +17,13 @@ export default function SearchInput() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!searchText) {
+    const text = searchText.trim();
+    if (!text) {
       alert("검색어를 입력해주세요");
       return;
     }
-    searchParams.set(searchOption, searchText);
+
+    searchParams.set(searchOption, text);
     navigate({
       pathname: "/",
       search: searchParams.toString(),
