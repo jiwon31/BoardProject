@@ -1,13 +1,11 @@
 import useSearch from "hooks/useSearch";
 import { useState, useEffect } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
 
 export default function SearchInput() {
   const [searchOption, setSearchOption] = useState<string>("title");
   const [searchText, setSearchText] = useState<string>("");
-  const { searchParams } = useSearch();
-  const navigate = useNavigate();
+  const { searchParams, setSearchParams } = useSearch();
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setSearchOption(e.target.value);
@@ -22,12 +20,7 @@ export default function SearchInput() {
       alert("검색어를 입력해주세요");
       return;
     }
-
-    searchParams.set(searchOption, text);
-    navigate({
-      pathname: "/",
-      search: searchParams.toString(),
-    });
+    setSearchParams(searchOption, searchText);
   };
 
   useEffect(() => {
