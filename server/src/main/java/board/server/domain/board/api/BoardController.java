@@ -2,16 +2,14 @@ package board.server.domain.board.api;
 
 import board.server.domain.board.api.request.CreateBoardRequest;
 import board.server.domain.board.api.request.UpdateBoardRequest;
-import board.server.domain.board.api.response.CreateBoardResponse;
-import board.server.domain.board.api.response.GetBoardListResponse;
-import board.server.domain.board.api.response.GetBoardResponse;
-import board.server.domain.board.api.response.UpdateBoardResponse;
+import board.server.domain.board.api.response.*;
 import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.mapper.BoardDtoMapper;
 import board.server.domain.board.service.BoardSearchService;
 import board.server.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -83,12 +81,17 @@ public class BoardController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<GetBoardListResponse>> getBoardList(
+    public ResponseEntity<GetBoardListResponse> getBoardList(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String content,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        List<BoardDto> boardList = boardSearchService.getBoardListBySearchConditions(title, content, pageable);
-        return ResponseEntity.ok(boardList.stream().map(dtoMapper::toGetListResponse).collect(Collectors.toList()));
+        Page<BoardDto> boards = boardSearchService.getBoardListBySearchConditions(title, content, pageable);
+        List<GetBoardListResult> collect = boards.getContent()
+                .stream()
+                .map(dtoMapper::toGetListResult)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new GetBoardListResponse(boards.getTotalPages(), collect));
     }
 }
