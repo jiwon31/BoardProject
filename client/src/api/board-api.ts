@@ -1,4 +1,4 @@
-import { Board, BoardContent, UpdateBoardRequest } from "types/board.d";
+import { Board, BoardContent, GetBoardListResponse, UpdateBoardRequest } from "types/board.d";
 import { instance } from "./axios.config";
 
 export default class BoardApi {
@@ -22,9 +22,8 @@ export default class BoardApi {
     return response.data;
   }
 
-  // TODO: 파라미터 & 페이징
   async getBoardList(searchParams?: URLSearchParams) {
-    const response = await instance.get<Board[]>("/boards", {
+    const response = await instance.get<GetBoardListResponse>("/boards", {
       params: searchParams
     });
     return response.data;

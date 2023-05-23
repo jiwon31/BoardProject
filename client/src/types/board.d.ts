@@ -8,6 +8,11 @@ export type UpdateBoardRequest = {
 	info: BoardContent;
 }
 
+export type GetBoardListResponse = {
+	totalPages: number;
+	boards: Board[]
+}
+
 export type Board = {
     id: number;
 	title: string;

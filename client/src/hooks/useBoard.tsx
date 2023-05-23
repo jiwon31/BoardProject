@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import BoardApi from "api/board-api";
-import { Board, BoardContent, UpdateBoardRequest } from "types/board";
+import {
+  Board,
+  BoardContent,
+  GetBoardListResponse,
+  UpdateBoardRequest,
+} from "types/board";
 import useRecoilUser from "./useRecoilUser";
 import { useLocation } from "react-router-dom";
 import useSearch from "./useSearch";
@@ -11,7 +16,7 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
   const { searchParams } = useSearch();
   const queryClient = useQueryClient();
 
-  const boardQuery = useQuery<Board[], Error>(
+  const boardQuery = useQuery<GetBoardListResponse, Error>(
     ["boards"],
     () => boardApi.getBoardList(searchParams),
     { staleTime: 1000 * 60, enabled: pathname === "/" }

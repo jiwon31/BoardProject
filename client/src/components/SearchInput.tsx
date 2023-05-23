@@ -24,14 +24,20 @@ export default function SearchInput() {
   };
 
   useEffect(() => {
-    if (!searchParams.toString()) {
+    const hasTitle = searchParams.has("title");
+    const hasContent = searchParams.has("content");
+
+    if (hasTitle || hasContent) {
+      const key = hasTitle ? "title" : "content";
+      const value = hasTitle
+        ? searchParams.get("title")
+        : searchParams.get("content");
+      setSearchOption(key);
+      setSearchText(value!);
+    } else {
       setSearchOption("title");
       setSearchText("");
     }
-    searchParams.forEach((value, key) => {
-      setSearchText(value);
-      setSearchOption(key);
-    });
   }, [searchParams]);
 
   return (
