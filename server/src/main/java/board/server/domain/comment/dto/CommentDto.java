@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class CommentDto {
@@ -19,6 +21,8 @@ public class CommentDto {
     private final Boolean isDeleted;
 
     private final LocalDateTime createdAt;
+
+    private List<CommentDto> children = new ArrayList<>();
 
     @Builder
     public CommentDto(Long id, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt) {

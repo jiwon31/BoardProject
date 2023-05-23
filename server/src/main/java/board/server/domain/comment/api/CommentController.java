@@ -38,6 +38,18 @@ public class CommentController {
     }
 
     /**
+     * 대댓글 생성
+     */
+    @PostMapping("/boards/{boardId}/comments/{commentId}")
+    public ResponseEntity<CreateCommentResponse> createNestedComment(@PathVariable Long boardId,
+                                                                     @PathVariable Long commentId,
+                                                                     @RequestBody @Valid CreateCommentRequest request) {
+        CommentDto commentDto = dtoMapper.fromCreateRequest(request);
+        Long id = commentService.createNested(getUserId(), boardId, commentId, commentDto).getId();
+        return ResponseEntity.ok(new CreateCommentResponse(id));
+    }
+
+    /**
      * 댓글 수정
      */
     @PutMapping("/comments/{commentId}")

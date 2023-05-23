@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static javax.persistence.FetchType.*;
 
 @Entity
@@ -38,12 +41,20 @@ public class Comment extends BaseTime {
     @Convert(converter = BooleanToYnConverter.class)
     private Boolean isDeleted;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent")
+    private List<Comment> children = new ArrayList<>();
+
     @Builder
-    public Comment(String content, User user, Board board, Boolean isDeleted) {
+    public Comment(String content, User user, Board board, Boolean isDeleted, Comment parent) {
         this.content = content;
         this.user = user;
         this.board = board;
         this.isDeleted = isDeleted;
+        this.parent = parent;
     }
 
     // 수정
@@ -54,5 +65,15 @@ public class Comment extends BaseTime {
     // 삭제 처리
     public void delete() {
         this.isDeleted = true;
+    }
+
+    // 연관관계 메서드
+    public void addChildComment(Comment child) {
+        this.children.add(child);
+        child.setParent(this);
+    }
+
+    private void setParent(Comment parent) {
+        this.parent = parent;
     }
 }

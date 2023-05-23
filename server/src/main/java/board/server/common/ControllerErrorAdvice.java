@@ -58,4 +58,10 @@ public class ControllerErrorAdvice {
     public ErrorResponse handleUserNotCommentAuthorException() {
         return new ErrorResponse("해당 사용자는 댓글 작성자가 아니므로 권한이 없습니다.");
     }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(CommentAlreadyDeletedException.class)
+    public ErrorResponse handleCommentAlreadyDeletedException() {
+        return new ErrorResponse("삭제된 댓글에는 답글을 작성할 수 없습니다.");
+    }
 }
