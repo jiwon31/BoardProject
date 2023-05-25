@@ -1,4 +1,4 @@
-import BoardItem from "components/BoardItem";
+import BoardItem from "components/board/BoardItem";
 import useMyBoard from "hooks/useMyBoard";
 
 export default function MyBoards() {

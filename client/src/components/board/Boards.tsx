@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import BoardItem from "./BoardItem";
 import useSearch from "hooks/useSearch";
-import Pagination from "./Pagination";
+import Pagination from "../Pagination";
 import useGetBoards from "hooks/board/useGetBoards";
 
 export default function Boards() {

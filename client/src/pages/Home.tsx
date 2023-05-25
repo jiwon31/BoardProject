@@ -1,4 +1,4 @@
-import Boards from "components/Boards";
+import Boards from "components/board/Boards";
 
 export default function Home() {
   return <Boards />;
