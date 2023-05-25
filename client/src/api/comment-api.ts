@@ -1,14 +1,22 @@
-import { Comment, CommentContent, CreateCommentRequest, UpdateCommentRequest } from 'types/comment';
+import { Comment, CommentContent, CreateCommentRequest, CreateReplyRequest, UpdateCommentRequest } from 'types/comment';
 import { instance } from './axios.config';
 
 export default class CommentApi {
     async createComment(data: CreateCommentRequest) {
-        const response = await instance.post<{id: number}>(`/boards/${data.boardId}/comments`, data.content);
+        const { boardId, content } = data;
+        const response = await instance.post<{id: number}>(`/boards/${boardId}/comments`, content);
+        return response.data;
+    }
+
+    async createReply(data: CreateReplyRequest) {
+        const { boardId, commentId, content } = data;
+        const response = await instance.post<{id: number}>(`/boards/${boardId}/comments/${commentId}`, content);
         return response.data;
     }
 
     async updateComment(data: UpdateCommentRequest) {
-        const response = await instance.put<CommentContent>(`/comments/${data.commentId}`, data.content);
+        const { commentId, content } = data;
+        const response = await instance.put<CommentContent>(`/comments/${commentId}`, content);
         return response.data;
     }
 

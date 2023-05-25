@@ -1,22 +1,11 @@
-import { Comment, CommentContent, UpdateCommentRequest } from "types/comment";
 import CommentItem from "./CommentItem";
-import { UseMutationResult } from "@tanstack/react-query";
+import useGetComment from "hooks/comment/useGetComment";
 
-type CommentsProps = {
-  isLoading: boolean;
-  error: Error | null;
-  comments?: Comment[];
-  updateComment: UseMutationResult<CommentContent, Error, UpdateCommentRequest>;
-  deleteComment: UseMutationResult<void, Error, number>;
-};
+export default function Comments({ boardId }: { boardId: number }) {
+  const {
+    getCommentList: { isLoading, error, data: comments },
+  } = useGetComment(boardId);
 
-export default function Comments({
-  isLoading,
-  error,
-  comments,
-  updateComment,
-  deleteComment,
-}: CommentsProps) {
   return (
     <div>
       {isLoading && <p>Loading...</p>}
@@ -24,12 +13,7 @@ export default function Comments({
       <ul className="flex flex-col gap-y-2">
         {comments &&
           comments.map((comment) => (
-            <CommentItem
-              key={comment.id}
-              comment={comment}
-              updateComment={updateComment}
-              deleteComment={deleteComment}
-            />
+            <CommentItem key={comment.id} comment={comment} boardId={boardId} />
           ))}
       </ul>
     </div>

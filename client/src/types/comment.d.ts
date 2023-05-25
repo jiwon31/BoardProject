@@ -7,6 +7,12 @@ export type CreateCommentRequest = {
     content: CommentContent;
 }
 
+export type CreateReplyRequest = {
+    boardId: number;
+    commentId: number;
+    content: CommentContent;
+}
+
 export type UpdateCommentRequest = {
     commentId: number;
     content: CommentContent;
@@ -19,4 +25,5 @@ export type Comment = {
 	userName: string;
 	isDeleted: boolean;
 	createdAt: string;
+    children: Comment[];
 }

@@ -19,7 +19,7 @@ export default function CommentInput({
     setContent(e.target.value);
 
   return (
-    <div className="flex flex-col border border-gray-300 p-3">
+    <div className="flex flex-col border border-gray-300 p-3 bg-white">
       <textarea
         className="border-none mb-5"
         name="content"
