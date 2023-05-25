@@ -1,10 +1,10 @@
+import useGetComments from "hooks/comment/useGetComments";
 import CommentItem from "./CommentItem";
-import useGetComment from "hooks/comment/useGetComment";
 
 export default function Comments({ boardId }: { boardId: number }) {
   const {
     getCommentList: { isLoading, error, data: comments },
-  } = useGetComment(boardId);
+  } = useGetComments(boardId);
 
   return (
     <div>

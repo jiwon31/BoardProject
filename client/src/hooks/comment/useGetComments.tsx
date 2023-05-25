@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import CommentApi from "api/comment-api";
 import { Comment } from "types/comment";
 
-export default function useGetComment(
+export default function useGetComments(
   boardId: number,
   commentApi = new CommentApi()
 ) {
