@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "./ui/Button";
 import { BoardContent } from "types/board";
-import useBoard from "hooks/useBoard";
+import useBoard from "hooks/board/useBoard";
 import { useNavigate, useParams } from "react-router-dom";
 
 const initialBoardInfo = {

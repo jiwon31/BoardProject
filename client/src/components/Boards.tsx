@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import BoardItem from "./BoardItem";
-import useBoard from "hooks/useBoard";
 import useSearch from "hooks/useSearch";
 import Pagination from "./Pagination";
+import useGetBoards from "hooks/board/useGetBoards";
 
 export default function Boards() {
   const {
-    boardQuery: { isLoading, error, data, refetch },
-  } = useBoard();
+    getBoardList: { isLoading, error, data, refetch },
+  } = useGetBoards();
   const boards = data?.boards;
   const { searchParams } = useSearch();
 

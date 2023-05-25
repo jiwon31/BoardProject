@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useBoard from "hooks/useBoard";
+import useBoard from "hooks/board/useBoard";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { RxDotsVertical } from "react-icons/rx";
