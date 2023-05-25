@@ -8,7 +8,8 @@ export default class BoardApi {
   }
 
   async updateBoard(data: UpdateBoardRequest) {
-    const response = await instance.put<Board>(`/boards/${data.id}`, data.info);
+    const { id, info } = data;
+    const response = await instance.put<Board>(`/boards/${id}`, info);
     return response.data;
   }
 
