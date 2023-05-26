@@ -3,8 +3,12 @@ package board.server.domain.board.service;
 import board.server.common.exception.UserNotBoardAuthorException;
 import board.server.common.util.CommonUtil;
 import board.server.domain.board.dto.BoardDto;
+import board.server.domain.board.dto.BoardFileDto;
 import board.server.domain.board.entity.Board;
+import board.server.domain.board.entity.BoardFile;
+import board.server.domain.board.mapper.BoardFileMapper;
 import board.server.domain.board.mapper.BoardMapper;
+import board.server.domain.board.repository.BoardFileRepository;
 import board.server.domain.board.repository.BoardRepository;
 import board.server.domain.user.entitiy.User;
 import lombok.RequiredArgsConstructor;
@@ -12,13 +16,17 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final BoardFileRepository boardFileRepository;
     private final BoardMapper boardMapper = Mappers.getMapper(BoardMapper.class);
+    private final BoardFileMapper boardFileMapper = Mappers.getMapper(BoardFileMapper.class);
     private final CommonUtil commonUtil;
 
     /**
@@ -64,7 +72,14 @@ public class BoardService {
      */
     public BoardDto fineOne(Long boardId) {
         Board board = commonUtil.findBoard(boardId);
-        return boardMapper.toDto(board);
+        BoardDto boardDto = boardMapper.toDto(board);
+
+        List<BoardFile> files = boardFileRepository.findAllByBoardId(boardId);
+        for (BoardFile file : files) {
+            BoardFileDto boardFileDto = boardFileMapper.toDto(file);
+            boardDto.getFiles().add(boardFileDto);
+        }
+        return boardDto;
     }
 
     /**

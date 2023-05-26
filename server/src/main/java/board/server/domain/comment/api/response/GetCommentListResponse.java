@@ -23,7 +23,7 @@ public class GetCommentListResponse {
 
     private final LocalDateTime createdAt;
 
-    private List<CommentDto> children = new ArrayList<>();
+    private List<CommentDto> children;
 
     @Builder
     public GetCommentListResponse(Long id, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt, List<CommentDto> children) {

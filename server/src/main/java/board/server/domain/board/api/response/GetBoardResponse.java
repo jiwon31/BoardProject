@@ -1,9 +1,11 @@
 package board.server.domain.board.api.response;
 
+import board.server.domain.board.dto.BoardFileDto;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class GetBoardResponse {
@@ -22,8 +24,10 @@ public class GetBoardResponse {
 
     private final LocalDateTime createdAt;
 
+    private final List<BoardFileDto> files;
+
     @Builder
-    public GetBoardResponse(Long id, String title, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt) {
+    public GetBoardResponse(Long id, String title, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt, List<BoardFileDto> files) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -31,5 +35,6 @@ public class GetBoardResponse {
         this.userName = userName;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;
+        this.files = files;
     }
 }

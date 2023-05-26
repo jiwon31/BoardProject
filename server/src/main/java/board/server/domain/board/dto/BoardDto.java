@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class BoardDto {
@@ -20,6 +22,8 @@ public class BoardDto {
     private final Boolean isDeleted;
 
     private final LocalDateTime createdAt;
+
+    private final List<BoardFileDto> files = new ArrayList<>();
 
     @Builder
     public BoardDto(Long id, String title, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt) {
