@@ -7,10 +7,10 @@ import board.server.domain.user.entitiy.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+
+import java.util.List;
 
 import static javax.persistence.FetchType.*;
 
@@ -32,6 +32,9 @@ public class Board extends BaseTime {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
+
+    @OneToMany(mappedBy = "board")
+    private List<BoardFile> files;
 
     @Column(name = "del_yn")
     @Convert(converter = BooleanToYnConverter.class)

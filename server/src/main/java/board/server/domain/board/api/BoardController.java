@@ -5,6 +5,7 @@ import board.server.domain.board.api.request.UpdateBoardRequest;
 import board.server.domain.board.api.response.*;
 import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.mapper.BoardDtoMapper;
+import board.server.domain.board.service.BoardFileService;
 import board.server.domain.board.service.BoardSearchService;
 import board.server.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,15 +33,21 @@ public class BoardController {
 
     private final BoardService boardService;
     private final BoardSearchService boardSearchService;
+    private final BoardFileService boardFileService;
     private final BoardDtoMapper dtoMapper = Mappers.getMapper(BoardDtoMapper.class);
 
     /**
      * 게시글 생성
      */
     @PostMapping
-    public ResponseEntity<CreateBoardResponse> createBoard(@RequestBody @Valid CreateBoardRequest request) {
+    public ResponseEntity<CreateBoardResponse> createBoard(@RequestPart @Valid CreateBoardRequest request,
+                                                           @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         BoardDto requestDto = dtoMapper.fromCreateRequest(request);
         Long boardId = boardService.create(getUserId(), requestDto).getId();
+
+        if (files != null) {
+            boardFileService.storeFiles(boardId, files);
+        }
         return ResponseEntity.ok(new CreateBoardResponse(boardId));
     }
 
