@@ -6,8 +6,8 @@ import { formatDate } from "util/formatDate";
 import { FaUserCircle } from "react-icons/fa";
 import { RxDotsVertical } from "react-icons/rx";
 import { FaRegCommentDots } from "react-icons/fa";
-import { BsDownload } from "react-icons/bs";
 import CommentContainer from "components/comment/CommentContainer";
+import BoardFiles from "components/board/BoardFiles";
 
 export default function BoardDetail() {
   const { id } = useParams();
@@ -72,24 +72,7 @@ export default function BoardDetail() {
                 {board.content}
               </pre>
             </div>
-            {board.files.length > 0 && (
-              <div className="pt-8">
-                <h3 className="py-2">첨부파일</h3>
-                <ul className="flex flex-col w-4/5 py-3 border border-gray-300">
-                  {board.files.map((file) => (
-                    <li
-                      className="flex justify-between items-center px-3 py-2 hover:bg-slate-100"
-                      key={file.id}
-                    >
-                      <span className="hover:cursor-pointer">
-                        {file.originFileName}
-                      </span>
-                      <BsDownload className="text-lg hover:cursor-pointer hover:text-brand" />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            {board.files.length > 0 && <BoardFiles files={board.files} />}
           </div>
           <div className="mb-8">
             <button
