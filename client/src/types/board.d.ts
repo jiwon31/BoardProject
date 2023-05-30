@@ -19,6 +19,12 @@ export type Board = {
 	content: string;
 	userId: number;
 	userName: string;
+	files: BoardFile[];
 	createdAt: string;
 	isDeleted: boolean;
+}
+
+type BoardFile = {
+	id: number;
+	originFileName: string;
 }
