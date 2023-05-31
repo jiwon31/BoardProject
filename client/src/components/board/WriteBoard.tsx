@@ -18,12 +18,31 @@ export default function WriteBoard({ text }: { text: string }) {
     updateBoard,
   } = useBoard(boardId);
   const [boardInfo, setBoardInfo] = useState<BoardContent>(initialBoardInfo);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const navigate = useNavigate();
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setBoardInfo((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (files && files.length > 0) {
+      setUploadedFiles([...uploadedFiles, ...files]);
+      return;
+    }
+    setUploadedFiles([]);
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = setFormData();
+
     if (!boardId) {
-      createBoard.mutate(boardInfo, {
+      createBoard.mutate(formData, {
         onSuccess: (data) => navigate(`/boards/${data.id}`),
         onError: (error) => alert(error.message),
       });
@@ -38,12 +57,17 @@ export default function WriteBoard({ text }: { text: string }) {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setBoardInfo((prev) => ({ ...prev, [name]: value }));
-  };
+  function setFormData(): FormData {
+    const formData = new FormData();
+    formData.append(
+      "request",
+      new Blob([JSON.stringify(boardInfo)], { type: "application/json" })
+    );
+    if (uploadedFiles.length) {
+      uploadedFiles.forEach((file) => formData.append("files", file));
+    }
+    return formData;
+  }
 
   /** 새로고침 대응 */
   useEffect(() => {
@@ -59,10 +83,10 @@ export default function WriteBoard({ text }: { text: string }) {
   return (
     <section className="py-10 max-w-5xl mx-auto h-screen">
       <form
-        className="flex flex-col gap-y-10 w-full h-full"
+        className="flex flex-col gap-y-5 w-full h-full"
         onSubmit={handleSubmit}
       >
-        <div className="flex justify-between items-center pb-5 border-b border-gray-200">
+        <div className="flex justify-between items-center mb-5 pb-5 border-b border-gray-200">
           <h1 className="text-2xl font-bold">{text}</h1>
           <Button
             text="완료"
@@ -76,6 +100,18 @@ export default function WriteBoard({ text }: { text: string }) {
           placeholder="제목"
           required
           onChange={handleChange}
+        />
+        <input
+          className="block w-3/12 text-sm border-none pl-0 p-3 
+          file:mr-4 file:py-2 file:px-4
+          file:rounded-md file:border-0
+          file:text-sm file:font-semibold
+        file:bg-red-50 file:text-brand
+        hover:file:bg-red-100"
+          type="file"
+          name="file"
+          multiple
+          onChange={handleFileChange}
         />
         <textarea
           className="h-full"

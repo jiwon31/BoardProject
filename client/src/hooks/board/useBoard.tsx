@@ -16,7 +16,7 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
     }
   );
 
-  const createBoard = useMutation<{ id: number }, Error, BoardContent>(
+  const createBoard = useMutation<{ id: number }, Error, FormData>(
     (data) => boardApi.createBoard(data),
     {
       onSuccess: () => {

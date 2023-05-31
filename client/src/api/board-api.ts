@@ -1,9 +1,10 @@
-import { Board, BoardContent, GetBoardListResponse, UpdateBoardRequest } from "types/board.d";
+import { Board, GetBoardListResponse, UpdateBoardRequest } from "types/board.d";
 import { instance } from "./axios.config";
 
 export default class BoardApi {
-  async createBoard(data: BoardContent) {
-    const response = await instance.post<{id: number}>("/boards", data);
+  async createBoard(data: FormData) {
+    const response = await instance.post<{id: number}>("/boards", data, { headers: {
+      "Content-Type": "multipart/form-data" }});
     return response.data;
   }
 
