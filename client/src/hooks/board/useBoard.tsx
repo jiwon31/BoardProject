@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import BoardApi from "api/board-api";
-import { Board, BoardContent, UpdateBoardRequest } from "types/board";
+import { Board, UpdateBoardRequest } from "types/board";
 import useRecoilUser from "../useRecoilUser";
 
 export default function useBoard(boardId?: number, boardApi = new BoardApi()) {

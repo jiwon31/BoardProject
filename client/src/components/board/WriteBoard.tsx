@@ -3,6 +3,7 @@ import { Button } from "../ui/Button";
 import { BoardContent } from "types/board";
 import useBoard from "hooks/board/useBoard";
 import { useNavigate, useParams } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 const initialBoardInfo = {
   title: "",
@@ -37,6 +38,9 @@ export default function WriteBoard({ text }: { text: string }) {
     setUploadedFiles([]);
   };
 
+  const deleteFile = (fileName: string) =>
+    setUploadedFiles(uploadedFiles.filter((file) => file.name !== fileName));
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = setFormData();
@@ -63,7 +67,7 @@ export default function WriteBoard({ text }: { text: string }) {
       "request",
       new Blob([JSON.stringify(boardInfo)], { type: "application/json" })
     );
-    if (uploadedFiles.length) {
+    if (uploadedFiles.length > 0) {
       uploadedFiles.forEach((file) => formData.append("files", file));
     }
     return formData;
@@ -101,18 +105,20 @@ export default function WriteBoard({ text }: { text: string }) {
           required
           onChange={handleChange}
         />
-        <input
-          className="block w-3/12 text-sm border-none pl-0 p-3 
+        <div>
+          <input
+            className="block w-3/12 text-white border-none p-0
           file:mr-4 file:py-2 file:px-4
           file:rounded-md file:border-0
           file:text-sm file:font-semibold
         file:bg-red-50 file:text-brand
         hover:file:bg-red-100"
-          type="file"
-          name="file"
-          multiple
-          onChange={handleFileChange}
-        />
+            type="file"
+            name="file"
+            multiple
+            onChange={handleFileChange}
+          />
+        </div>
         <textarea
           className="h-full"
           name="content"
@@ -121,6 +127,28 @@ export default function WriteBoard({ text }: { text: string }) {
           required
           onChange={handleChange}
         />
+        {uploadedFiles.length > 0 && (
+          <div>
+            <h3 className="py-1">첨부파일</h3>
+            <ul className="flex flex-col w-4/5 py-3 border border-gray-200">
+              {uploadedFiles.map((file) => (
+                <li
+                  key={uuidv4()}
+                  className="flex justify-between items-center px-3 py-1 hover:bg-slate-100"
+                >
+                  <span className="hover:cursor-default">{file.name}</span>
+                  <button
+                    className="text-lg hover:cursor-pointer hover:text-brand"
+                    type="button"
+                    onClick={() => deleteFile(file.name)}
+                  >
+                    x
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </form>
     </section>
   );
