@@ -1,8 +1,6 @@
 package board.server.domain.board.api;
 
-import board.server.common.exception.BoardFileNotFoundException;
 import board.server.domain.board.entity.BoardFile;
-import board.server.domain.board.repository.BoardFileRepository;
 import board.server.domain.board.service.BoardFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -21,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class BoardFileController {
 
-    private final BoardFileRepository boardFileRepository;
     private final BoardFileService boardFileService;
 
     /**
@@ -29,7 +26,7 @@ public class BoardFileController {
      */
     @GetMapping("/files/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) throws MalformedURLException {
-        BoardFile file = findBoardFile(fileId);
+        BoardFile file = boardFileService.findBoardFile(fileId);
         String storeFileName = file.getStoreFileName();
         String originFileName = file.getOriginFileName();
 
@@ -41,10 +38,5 @@ public class BoardFileController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .body(resource);
-    }
-
-    private BoardFile findBoardFile(Long id) {
-        return boardFileRepository.findById(id)
-                .orElseThrow(() -> new BoardFileNotFoundException(id));
     }
 }

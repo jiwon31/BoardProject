@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 const initialBoardInfo = {
   title: "",
   content: "",
+  files: [],
 };
 
 export default function WriteBoard({ text }: { text: string }) {
@@ -39,7 +40,11 @@ export default function WriteBoard({ text }: { text: string }) {
   };
 
   const deleteFile = (fileName: string) =>
-    setUploadedFiles(uploadedFiles.filter((file) => file.name !== fileName));
+    setBoardInfo((prev) => ({
+      ...prev,
+      files: boardInfo.files.filter((file) => file.originFileName !== fileName),
+    }));
+  // setUploadedFiles(uploadedFiles.filter((file) => file.name !== fileName));
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,7 +57,7 @@ export default function WriteBoard({ text }: { text: string }) {
       });
     } else {
       updateBoard.mutate(
-        { id: boardId, info: boardInfo },
+        { id: boardId, info: formData },
         {
           onSuccess: () => navigate(`/boards/${boardId}`),
           onError: (error) => alert(error.message),
@@ -80,9 +85,11 @@ export default function WriteBoard({ text }: { text: string }) {
         ...prev,
         title: board.title,
         content: board.content,
+        files: board.files,
       }));
     }
   }, [board]);
+  console.log(boardInfo.files);
 
   return (
     <section className="py-10 max-w-5xl mx-auto h-screen">
@@ -127,10 +134,28 @@ export default function WriteBoard({ text }: { text: string }) {
           required
           onChange={handleChange}
         />
-        {uploadedFiles.length > 0 && (
+        {(uploadedFiles.length > 0 || boardInfo.files.length > 0) && (
           <div>
             <h3 className="py-1">첨부파일</h3>
             <ul className="flex flex-col w-4/5 py-3 border border-gray-200">
+              {boardInfo.files.length > 0 &&
+                boardInfo.files.map((file) => (
+                  <li
+                    key={file.id}
+                    className="flex justify-between items-center px-3 py-1 hover:bg-slate-100"
+                  >
+                    <span className="hover:cursor-default">
+                      {file.originFileName}
+                    </span>
+                    <button
+                      className="text-lg hover:cursor-pointer hover:text-brand"
+                      type="button"
+                      onClick={() => deleteFile(file.originFileName)}
+                    >
+                      x
+                    </button>
+                  </li>
+                ))}
               {uploadedFiles.map((file) => (
                 <li
                   key={uuidv4()}

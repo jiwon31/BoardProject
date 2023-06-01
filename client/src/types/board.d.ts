@@ -1,11 +1,12 @@
 export type BoardContent = {
     title: string;
     content: string;
+	files: BoardFile[];
 }
 
 export type UpdateBoardRequest = {
 	id: number;
-	info: BoardContent;
+	info: FormData;
 }
 
 export type GetBoardListResponse = {

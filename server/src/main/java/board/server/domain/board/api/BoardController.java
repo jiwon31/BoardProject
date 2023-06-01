@@ -4,10 +4,14 @@ import board.server.domain.board.api.request.CreateBoardRequest;
 import board.server.domain.board.api.request.UpdateBoardRequest;
 import board.server.domain.board.api.response.*;
 import board.server.domain.board.dto.BoardDto;
+import board.server.domain.board.entity.BoardFile;
 import board.server.domain.board.mapper.BoardDtoMapper;
+import board.server.domain.board.mapper.BoardFileMapper;
+import board.server.domain.board.repository.BoardFileRepository;
 import board.server.domain.board.service.BoardFileService;
 import board.server.domain.board.service.BoardSearchService;
 import board.server.domain.board.service.BoardService;
+import board.server.domain.board.util.BoardUtil;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
@@ -15,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +40,8 @@ public class BoardController {
     private final BoardSearchService boardSearchService;
     private final BoardFileService boardFileService;
     private final BoardDtoMapper dtoMapper = Mappers.getMapper(BoardDtoMapper.class);
+    private final BoardFileMapper fileMapper = Mappers.getMapper(BoardFileMapper.class);
+    private final BoardUtil boardUtil;
 
     /**
      * 게시글 생성
@@ -55,9 +62,26 @@ public class BoardController {
      * 게시글 수정
      */
     @PutMapping("/{boardId}")
-    public ResponseEntity<UpdateBoardResponse> updateBoard(@PathVariable Long boardId, @RequestBody @Valid UpdateBoardRequest request) {
+    public ResponseEntity<UpdateBoardResponse> updateBoard(@PathVariable Long boardId, @RequestPart @Valid UpdateBoardRequest request,
+                                                           @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         boardService.checkBoardAuthor(boardId, getUserId());
         BoardDto requestDto = dtoMapper.fromUpdateRequest(boardId, request);
+
+        if (!CollectionUtils.isEmpty(boardUtil.findFilesByBoardId(boardId))) {
+            if (request.getFiles() != null) {
+                for (BoardFile file : request.getFiles()) {
+                    requestDto.getFiles().add(fileMapper.toDto(file));
+                }
+                boardFileService.update(boardId, requestDto);
+            } else {
+                boardFileService.deleteAll(boardId);
+            }
+        }
+
+        if (files != null) {
+            boardFileService.storeFiles(boardId, files);
+        }
+
         BoardDto boardDto = boardService.update(requestDto);
         return ResponseEntity.ok(dtoMapper.toUpdateResponse(boardDto));
     }

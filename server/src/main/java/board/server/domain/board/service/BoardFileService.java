@@ -1,9 +1,13 @@
 package board.server.domain.board.service;
 
+import board.server.common.exception.BoardFileNotFoundException;
 import board.server.common.util.CommonUtil;
+import board.server.domain.board.dto.BoardDto;
+import board.server.domain.board.dto.BoardFileDto;
 import board.server.domain.board.entity.Board;
 import board.server.domain.board.entity.BoardFile;
 import board.server.domain.board.repository.BoardFileRepository;
+import board.server.domain.board.util.BoardUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,9 +27,14 @@ public class BoardFileService {
 
     private final BoardFileRepository boardFileRepository;
     private final CommonUtil commonUtil;
+    private final BoardUtil boardUtil;
 
     @Value("${file.dir}")
     private String fileDir;
+
+    public String getPullPath(String filename) {
+        return fileDir + filename;
+    }
 
     /**
      * 게시글 파일 업로드
@@ -71,8 +81,42 @@ public class BoardFileService {
         boardFileRepository.save(file);
     }
 
-    public String getPullPath(String filename) {
-        return fileDir + filename;
+    /**
+     * 기존에 존재하는 파일 수정
+     *
+     * @param boardId
+     * @param boardDto
+     */
+    @Transactional
+    public void update(Long boardId, BoardDto boardDto) {
+        List<Long> fileIdList = new ArrayList<>();
+        for (BoardFileDto file : boardDto.getFiles()) {
+            fileIdList.add(file.getId());
+        }
+        List<BoardFile> files = boardUtil.findFilesByBoardId(boardId);
+        for (BoardFile file : files) {
+            if (!fileIdList.contains(file.getId())) {
+                boardFileRepository.deleteById(file.getId());
+            }
+        }
+    }
+
+    /**
+     * 특정 게시글의 첨부 파일들 모두 삭제
+     *
+     * @param boardId : 게시글 식별자
+     */
+    @Transactional
+    public void deleteAll(Long boardId) {
+        boardFileRepository.deleteAllByBoardId(boardId);
+    }
+
+    /**
+     * 특정 파일 검색
+     */
+    public BoardFile findBoardFile(Long id) {
+        return boardFileRepository.findById(id)
+                .orElseThrow(() -> new BoardFileNotFoundException(id));
     }
 
     /**

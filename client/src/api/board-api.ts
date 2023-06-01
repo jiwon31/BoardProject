@@ -10,7 +10,8 @@ export default class BoardApi {
 
   async updateBoard(data: UpdateBoardRequest) {
     const { id, info } = data;
-    const response = await instance.put<Board>(`/boards/${id}`, info);
+    const response = await instance.put<Board>(`/boards/${id}`, info, { headers: {
+      "Content-Type": "multipart/form-data" }});
     return response.data;
   }
 
