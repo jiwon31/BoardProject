@@ -39,12 +39,14 @@ export default function WriteBoard({ text }: { text: string }) {
     setUploadedFiles([]);
   };
 
-  const deleteFile = (fileName: string) =>
+  const deleteFileByName = (fileName: string) =>
+    setUploadedFiles(uploadedFiles.filter((file) => file.name !== fileName));
+
+  const deleteFileById = (fileId: number) =>
     setBoardInfo((prev) => ({
       ...prev,
-      files: boardInfo.files.filter((file) => file.originFileName !== fileName),
+      files: boardInfo.files.filter((file) => file.id !== fileId),
     }));
-  // setUploadedFiles(uploadedFiles.filter((file) => file.name !== fileName));
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -89,7 +91,6 @@ export default function WriteBoard({ text }: { text: string }) {
       }));
     }
   }, [board]);
-  console.log(boardInfo.files);
 
   return (
     <section className="py-10 max-w-5xl mx-auto h-screen">
@@ -150,7 +151,7 @@ export default function WriteBoard({ text }: { text: string }) {
                     <button
                       className="text-lg hover:cursor-pointer hover:text-brand"
                       type="button"
-                      onClick={() => deleteFile(file.originFileName)}
+                      onClick={() => deleteFileById(file.id)}
                     >
                       x
                     </button>
@@ -165,7 +166,7 @@ export default function WriteBoard({ text }: { text: string }) {
                   <button
                     className="text-lg hover:cursor-pointer hover:text-brand"
                     type="button"
-                    onClick={() => deleteFile(file.name)}
+                    onClick={() => deleteFileByName(file.name)}
                   >
                     x
                   </button>
