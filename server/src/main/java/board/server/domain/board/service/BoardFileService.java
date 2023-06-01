@@ -2,7 +2,6 @@ package board.server.domain.board.service;
 
 import board.server.common.exception.BoardFileNotFoundException;
 import board.server.common.util.CommonUtil;
-import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.dto.BoardFileDto;
 import board.server.domain.board.entity.Board;
 import board.server.domain.board.entity.BoardFile;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class BoardFileService {
 
@@ -42,7 +41,6 @@ public class BoardFileService {
      * @param boardId        : 게시글 식별자
      * @param multipartFiles : 업로드할 파일들
      */
-    @Transactional
     public void storeFiles(Long boardId, List<MultipartFile> multipartFiles) throws IOException {
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
@@ -57,8 +55,7 @@ public class BoardFileService {
      * @param boardId
      * @param multipartFile
      */
-    @Transactional
-    public void storeFile(Long boardId, MultipartFile multipartFile) throws IOException {
+    private void storeFile(Long boardId, MultipartFile multipartFile) throws IOException {
         String originalFilename = multipartFile.getOriginalFilename(); // 본래 파일명
         String storeFileName = createStoreFileName(originalFilename); // 서버에 저장하는 파일명
         String uploadPath = getPullPath(storeFileName);
@@ -73,65 +70,52 @@ public class BoardFileService {
                 .board(board)
                 .build();
 
-        saveFile(file); // DB에 파일 정보 저장
-    }
-
-    @Transactional
-    public void saveFile(BoardFile file) {
-        boardFileRepository.save(file);
+        boardFileRepository.save(file); // DB에 파일 정보 저장
     }
 
     /**
      * 기존에 존재하는 파일 수정
      *
      * @param boardId
-     * @param boardDto
+     * @param boardFileDto
      */
-    @Transactional
-    public void update(Long boardId, BoardDto boardDto) {
+    public void updateFiles(Long boardId, List<BoardFileDto> boardFileDto) {
         List<Long> fileIdList = new ArrayList<>();
-        for (BoardFileDto file : boardDto.getFiles()) {
-            fileIdList.add(file.getId());
-        }
-        List<BoardFile> files = boardUtil.findFilesByBoardId(boardId);
+        boardFileDto.forEach((file) -> fileIdList.add(file.getId()));
+
+        List<BoardFile> files = boardUtil.findFiles(boardId);
         for (BoardFile file : files) {
             if (!fileIdList.contains(file.getId())) {
-                boardFileRepository.deleteById(file.getId());
+                deleteFile(file);
             }
         }
     }
 
     /**
-     * 게시글 삭제됐을 때 첨부 파일도 함께 삭제 (서버 & DB 둘 다)
+     * 특정 게시글의 첨부 파일들 모두 삭제 (서버 & DB 둘 다)
      *
      * @param boardId : 게시글 식별자
      */
-    @Transactional
     public void deleteFiles(Long boardId) {
         List<BoardFile> files = boardFileRepository.findAllByBoardId(boardId);
-
         if (files != null) {
-            for (BoardFile file : files) {
-                String path = file.getUploadDir();
-                new File(path).delete(); // 서버에서 삭제
-                boardFileRepository.deleteById(file.getId()); // DB에서 삭제
-            }
+            files.forEach((file) -> deleteFile(file));
         }
     }
 
     /**
-     * 특정 게시글의 첨부 파일들 모두 삭제
-     *
-     * @param boardId : 게시글 식별자
+     * 파일 하나 삭제
      */
-    @Transactional
-    public void deleteAll(Long boardId) {
-        boardFileRepository.deleteAllByBoardId(boardId);
+    private void deleteFile(BoardFile file) {
+        String path = file.getUploadDir();
+        new File(path).delete(); // 서버에서 삭제
+        boardFileRepository.deleteById(file.getId()); // DB에서 삭제
     }
 
     /**
      * 특정 파일 검색
      */
+    @Transactional(readOnly = true)
     public BoardFile findBoardFile(Long id) {
         return boardFileRepository.findById(id)
                 .orElseThrow(() -> new BoardFileNotFoundException(id));

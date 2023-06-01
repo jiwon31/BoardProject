@@ -4,10 +4,9 @@ import board.server.domain.board.api.request.CreateBoardRequest;
 import board.server.domain.board.api.request.UpdateBoardRequest;
 import board.server.domain.board.api.response.*;
 import board.server.domain.board.dto.BoardDto;
-import board.server.domain.board.entity.BoardFile;
+import board.server.domain.board.dto.BoardFileDto;
 import board.server.domain.board.mapper.BoardDtoMapper;
 import board.server.domain.board.mapper.BoardFileMapper;
-import board.server.domain.board.repository.BoardFileRepository;
 import board.server.domain.board.service.BoardFileService;
 import board.server.domain.board.service.BoardSearchService;
 import board.server.domain.board.service.BoardService;
@@ -66,15 +65,14 @@ public class BoardController {
                                                            @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         boardService.checkBoardAuthor(boardId, getUserId());
         BoardDto requestDto = dtoMapper.fromUpdateRequest(boardId, request);
+        BoardDto boardDto = boardService.update(requestDto);
 
-        if (!CollectionUtils.isEmpty(boardUtil.findFilesByBoardId(boardId))) {
+        if (!CollectionUtils.isEmpty(boardUtil.findFiles(boardId))) {
             if (request.getFiles() != null) {
-                for (BoardFile file : request.getFiles()) {
-                    requestDto.getFiles().add(fileMapper.toDto(file));
-                }
-                boardFileService.update(boardId, requestDto);
+                List<BoardFileDto> boardFileDto = fileMapper.toDtoList(request.getFiles());
+                boardFileService.updateFiles(boardId, boardFileDto);
             } else {
-                boardFileService.deleteAll(boardId);
+                boardFileService.deleteFiles(boardId);
             }
         }
 
@@ -82,7 +80,6 @@ public class BoardController {
             boardFileService.storeFiles(boardId, files);
         }
 
-        BoardDto boardDto = boardService.update(requestDto);
         return ResponseEntity.ok(dtoMapper.toUpdateResponse(boardDto));
     }
 

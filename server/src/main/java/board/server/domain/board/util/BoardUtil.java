@@ -13,7 +13,7 @@ public class BoardUtil {
 
     private final BoardFileRepository boardFileRepository;
 
-    public List<BoardFile> findFilesByBoardId(Long boardId) {
+    public List<BoardFile> findFiles(Long boardId) {
         return boardFileRepository.findAllByBoardId(boardId);
     }
 }
