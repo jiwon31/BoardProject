@@ -102,6 +102,24 @@ public class BoardFileService {
     }
 
     /**
+     * 게시글 삭제됐을 때 첨부 파일도 함께 삭제 (서버 & DB 둘 다)
+     *
+     * @param boardId : 게시글 식별자
+     */
+    @Transactional
+    public void deleteFiles(Long boardId) {
+        List<BoardFile> files = boardFileRepository.findAllByBoardId(boardId);
+
+        if (files != null) {
+            for (BoardFile file : files) {
+                String path = file.getUploadDir();
+                new File(path).delete(); // 서버에서 삭제
+                boardFileRepository.deleteById(file.getId()); // DB에서 삭제
+            }
+        }
+    }
+
+    /**
      * 특정 게시글의 첨부 파일들 모두 삭제
      *
      * @param boardId : 게시글 식별자

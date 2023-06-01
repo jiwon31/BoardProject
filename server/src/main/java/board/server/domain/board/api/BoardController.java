@@ -93,6 +93,7 @@ public class BoardController {
     public ResponseEntity<Objects> deleteBoard(@PathVariable Long boardId) {
         boardService.checkBoardAuthor(boardId, getUserId());
         boardService.delete(boardId);
+        boardFileService.deleteFiles(boardId);
         return ResponseEntity.noContent().build();
     }
 
