@@ -35,16 +35,16 @@ public class Board extends BaseTime {
     @Convert(converter = BooleanToYnConverter.class)
     private Boolean isDeleted;
 
-    // 조회수
-//    @Column(name = "view_count")
-//    private int viewCount;
+    @Column(name = "view_count")
+    private int viewCount;
 
     @Builder
-    public Board(String title, String content, User user, Boolean isDeleted) {
+    public Board(String title, String content, User user, Boolean isDeleted, int viewCount) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.isDeleted = isDeleted;
+        this.viewCount = viewCount;
     }
 
     // 수정
@@ -56,5 +56,10 @@ public class Board extends BaseTime {
     // 삭제 처리
     public void delete() {
         this.isDeleted = true;
+    }
+
+    // 조회수 증가
+    public void increaseViewCount() {
+        this.viewCount += 1;
     }
 }

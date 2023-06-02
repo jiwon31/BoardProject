@@ -26,8 +26,11 @@ public class GetBoardResponse {
 
     private final List<BoardFileDto> files;
 
+    private final int viewCount;
+
     @Builder
-    public GetBoardResponse(Long id, String title, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt, List<BoardFileDto> files) {
+    public GetBoardResponse(Long id, String title, String content, Long userId,String userName, Boolean isDeleted,
+                            LocalDateTime createdAt, List<BoardFileDto> files, int viewCount) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -36,5 +39,6 @@ public class GetBoardResponse {
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;
         this.files = files;
+        this.viewCount = viewCount;
     }
 }

@@ -25,8 +25,10 @@ public class BoardDto {
 
     private final List<BoardFileDto> files = new ArrayList<>();
 
+    private final int viewCount;
+
     @Builder
-    public BoardDto(Long id, String title, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt) {
+    public BoardDto(Long id, String title, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt, int viewCount) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -34,5 +36,6 @@ public class BoardDto {
         this.userName = userName;
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;
+        this.viewCount = viewCount;
     }
 }

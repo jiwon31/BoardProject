@@ -70,8 +70,10 @@ public class BoardService {
      *
      * @param boardId : 게시글 식별자
      */
+    @Transactional
     public BoardDto fineOne(Long boardId) {
         Board board = commonUtil.findBoard(boardId);
+        board.increaseViewCount(); // 조회수 증가
         BoardDto boardDto = boardMapper.toDto(board);
 
         List<BoardFile> files = boardFileRepository.findAllByBoardId(boardId);
