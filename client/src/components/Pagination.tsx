@@ -2,8 +2,10 @@ import useSearch from "hooks/useSearch";
 import { useState } from "react";
 
 export default function Pagination({ totalPages }: { totalPages?: number }) {
-  const [page, setPage] = useState<number>(0);
   const { searchParams, setSearchParams } = useSearch();
+  const [page, setPage] = useState<number>(
+    parseInt(searchParams.get("page") ?? "0")
+  );
 
   const handleClick = (num: number) => {
     setPage(num);
