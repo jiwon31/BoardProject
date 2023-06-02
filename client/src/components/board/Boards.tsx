@@ -16,8 +16,9 @@ export default function Boards() {
   }, [searchParams, refetch]);
 
   /** 검색했을 때 삭제된 게시글은 보여주지 않는다. */
+  const regExp = /(?:title)|(?:content)/;
   const boardList =
-    searchParams.toString() && boards
+    boards && regExp.test(searchParams.toString())
       ? boards.filter((board) => !board.isDeleted)
       : boards;
 
