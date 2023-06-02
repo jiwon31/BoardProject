@@ -68,7 +68,7 @@ public class BoardController {
         BoardDto boardDto = boardService.update(requestDto);
 
         if (!CollectionUtils.isEmpty(boardUtil.findFiles(boardId))) {
-            if (request.getFiles() != null) {
+            if (request.getFiles().size() > 0) {
                 List<BoardFileDto> boardFileDto = fileMapper.toDtoList(request.getFiles());
                 boardFileService.updateFiles(boardId, boardFileDto);
             } else {

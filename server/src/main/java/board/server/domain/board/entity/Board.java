@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import java.util.List;
-
 import static javax.persistence.FetchType.*;
 
 @Entity
@@ -33,9 +31,6 @@ public class Board extends BaseTime {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
-    @OneToMany(mappedBy = "board")
-    private List<BoardFile> files;
-
     @Column(name = "del_yn")
     @Convert(converter = BooleanToYnConverter.class)
     private Boolean isDeleted;
@@ -43,7 +38,6 @@ public class Board extends BaseTime {
     // 조회수
 //    @Column(name = "view_count")
 //    private int viewCount;
-
 
     @Builder
     public Board(String title, String content, User user, Boolean isDeleted) {
