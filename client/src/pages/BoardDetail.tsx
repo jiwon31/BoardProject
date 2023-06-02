@@ -37,15 +37,20 @@ export default function BoardDetail() {
       {board && !board.isDeleted && (
         <>
           <div className="flex flex-col mb-20">
-            <div className="flex flex-col gap-y-10">
+            <div className="flex flex-col gap-y-8">
               <h1 className="text-2xl font-bold">{board.title}</h1>
-              <div className="flex items-center justify-between pb-6 border-b border-gray-200">
-                <div className="flex items-center gap-x-1">
-                  <FaUserCircle className="text-2xl text-gray-500" />
-                  <span className="font-bold">{board.userName}</span>
-                  <span className="ml-2 text-gray-400">
-                    {formatDate(board.createdAt)}
-                  </span>
+              <div className="flex items-center justify-between pb-3 border-b border-gray-200">
+                <div className="flex items-center gap-x-2">
+                  <FaUserCircle className="text-4xl text-gray-500" />
+                  <div className="flex flex-col">
+                    <span className="font-bold">{board.userName}</span>
+                    <div className="text-sm text-gray-400">
+                      <span className="mr-2">
+                        {formatDate(board.createdAt)}
+                      </span>
+                      <span>조회 {board.viewCount}</span>
+                    </div>
+                  </div>
                 </div>
                 {user?.id === board.userId && (
                   <div

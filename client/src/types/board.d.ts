@@ -23,6 +23,7 @@ export type Board = {
 	files: BoardFile[];
 	createdAt: string;
 	isDeleted: boolean;
+	viewCount: number;
 }
 
 type BoardFile = {
