@@ -27,8 +27,12 @@ public class BoardDto {
 
     private final int viewCount;
 
+    private final int likeCount;
+
     @Builder
-    public BoardDto(Long id, String title, String content, Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt, int viewCount) {
+    public BoardDto(Long id, String title, String content,
+                    Long userId, String userName, Boolean isDeleted,
+                    LocalDateTime createdAt, int viewCount, int likeCount) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -37,5 +41,6 @@ public class BoardDto {
         this.isDeleted = isDeleted;
         this.createdAt = createdAt;
         this.viewCount = viewCount;
+        this.likeCount = likeCount;
     }
 }

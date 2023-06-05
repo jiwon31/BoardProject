@@ -39,6 +39,7 @@ public class LikeService {
                 .user(user)
                 .board(board)
                 .build());
+        board.increaseLikeCount();
     }
 
     /**
@@ -55,5 +56,6 @@ public class LikeService {
                 .orElseThrow(() -> new NotLikedBoardException(boardId));
 
         likeRepository.deleteById(like.getId());
+        board.decreaseLikeCount();
     }
 }

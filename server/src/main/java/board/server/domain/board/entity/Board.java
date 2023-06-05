@@ -38,13 +38,17 @@ public class Board extends BaseTime {
     @Column(name = "view_count")
     private int viewCount;
 
+    @Column(name = "like_count")
+    private int likeCount;
+
     @Builder
-    public Board(String title, String content, User user, Boolean isDeleted, int viewCount) {
+    public Board(String title, String content, User user, Boolean isDeleted, int viewCount, int likeCount) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.isDeleted = isDeleted;
         this.viewCount = viewCount;
+        this.likeCount = likeCount;
     }
 
     // 수정
@@ -61,5 +65,15 @@ public class Board extends BaseTime {
     // 조회수 증가
     public void increaseViewCount() {
         this.viewCount += 1;
+    }
+
+    // 좋아요수 증가
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+
+    // 좋아요수 감소
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
     }
 }
