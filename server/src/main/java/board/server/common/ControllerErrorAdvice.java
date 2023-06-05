@@ -64,4 +64,16 @@ public class ControllerErrorAdvice {
     public ErrorResponse handleCommentAlreadyDeletedException() {
         return new ErrorResponse("삭제된 댓글에는 답글을 작성할 수 없습니다.");
     }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(AlreadyLikedBoardException.class)
+    public ErrorResponse handleAlreadyLikedBoardException() {
+        return new ErrorResponse("이미 좋아요를 누른 게시글입니다.");
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(NotLikedBoardException.class)
+    public ErrorResponse handleNotLikedBoardException() {
+        return new ErrorResponse("좋아요를 누르지 않은 게시글입니다.");
+    }
 }
