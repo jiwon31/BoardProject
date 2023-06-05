@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface BoardFileRepository extends JpaRepository<BoardFile, Long> {
     List<BoardFile> findAllByBoardId(Long boardId);
-
-    void deleteAllByBoardId(Long boardId);
 }
