@@ -17,14 +17,14 @@ import java.util.List;
 import static javax.persistence.FetchType.*;
 
 @Entity
-@Table(name = "board_comment")
+@Table(name = "comment")
 @Getter
 @NoArgsConstructor
 public class Comment extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_comment_id")
+    @Column(name = "comment_id")
     private Long id;
 
     private String content;
