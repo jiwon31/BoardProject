@@ -10,7 +10,7 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
   const singleBoardQuery = useQuery<Board, Error>(
     ["boards", { boardId }],
     () => boardApi.getSingleBoard(boardId!),
-    { enabled: !!boardId && !!user }
+    { staleTime: 1000 * 60 * 5, enabled: !!boardId && !!user }
   );
 
   const createBoard = useMutation<{ id: number }, Error, FormData>(

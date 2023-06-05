@@ -8,6 +8,7 @@ import { RxDotsVertical } from "react-icons/rx";
 import { FaRegCommentDots } from "react-icons/fa";
 import CommentContainer from "components/comment/CommentContainer";
 import BoardFiles from "components/board/BoardFiles";
+import LikeButton from "components/board/LikeButton";
 
 export default function BoardDetail() {
   const { id } = useParams();
@@ -79,7 +80,8 @@ export default function BoardDetail() {
             </div>
             {board.files.length > 0 && <BoardFiles files={board.files} />}
           </div>
-          <div className="mb-8">
+          <div className="flex gap-x-2 mb-8">
+            <LikeButton boardId={boardId} likeCount={board.likeCount} />
             <button
               className="flex items-center gap-x-1 px-2 py-1 border border-gray-300"
               onClick={() => setToggleComment((prev) => !prev)}

@@ -24,6 +24,7 @@ export type Board = {
 	createdAt: string;
 	isDeleted: boolean;
 	viewCount: number;
+	likeCount: number;
 }
 
 type BoardFile = {
