@@ -22,6 +22,14 @@ export default function TabList({ tab }: { tab: string }) {
       >
         내가 작성한 글
       </Link>
+      <Link
+        to="/mypage/likes"
+        className={`${
+          tab === "likes" && "text-brand border-l-2 border-brand"
+        } ${TAB_STYLE}`}
+      >
+        좋아요한 글
+      </Link>
     </div>
   );
 }

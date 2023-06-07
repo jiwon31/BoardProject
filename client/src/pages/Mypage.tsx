@@ -1,3 +1,4 @@
+import LikedBoards from "components/mypage/LikedBoards";
 import MyBoards from "components/mypage/MyBoards";
 import Profile from "components/mypage/Profile";
 import TabList from "components/mypage/TabList";
@@ -9,7 +10,9 @@ export default function Mypage() {
   return (
     <div className="flex py-10 max-w-6xl mx-auto">
       <TabList tab={tab!} />
-      {tab === "profile" ? <Profile /> : <MyBoards />}
+      {tab === "profile" && <Profile />}
+      {tab === "boards" && <MyBoards />}
+      {tab === "likes" && <LikedBoards />}
     </div>
   );
 }

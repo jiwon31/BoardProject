@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import UserApi from "api/user-api";
 import { Board } from "types/board";
-import useRecoilUser from "./useRecoilUser";
+import useRecoilUser from "../useRecoilUser";
 
 export default function useMyBoard(userApi = new UserApi()) {
   const { user } = useRecoilUser();

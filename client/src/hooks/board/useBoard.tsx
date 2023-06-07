@@ -34,6 +34,7 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
   function updateQueries() {
     queryClient.invalidateQueries(["boards", { boardId, userId: user?.id }]);
     queryClient.invalidateQueries(["boards", { userId: user?.id }]);
+    queryClient.invalidateQueries(["liked-boards", { userId: user?.id }]);
   }
 
   return {

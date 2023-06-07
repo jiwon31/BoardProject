@@ -10,4 +10,9 @@ export default class LikeApi {
         const response = await instance.delete(`/likes/${boardId}`);
         return response.data;
     }
+
+    async getUserLikedBoardList() {
+        const response = await instance.get("/users/likes/boards");
+        return response.data;
+    }
 }
