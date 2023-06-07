@@ -5,6 +5,7 @@ import board.server.domain.like.entity.Like;
 import board.server.domain.user.entitiy.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
@@ -12,4 +13,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     boolean existsByUserAndBoard(User user, Board board);
 
     Optional<Like> findByUserAndBoard(User user, Board board);
+
+    List<Like> findAllByBoardId(Long boardId);
 }

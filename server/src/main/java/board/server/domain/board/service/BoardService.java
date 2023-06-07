@@ -10,6 +10,8 @@ import board.server.domain.board.mapper.BoardFileMapper;
 import board.server.domain.board.mapper.BoardMapper;
 import board.server.domain.board.repository.BoardFileRepository;
 import board.server.domain.board.repository.BoardRepository;
+import board.server.domain.like.entity.Like;
+import board.server.domain.like.repository.LikeRepository;
 import board.server.domain.user.entitiy.User;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static board.server.common.util.SecurityUtil.*;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardFileRepository boardFileRepository;
+    private final LikeRepository likeRepository;
     private final BoardMapper boardMapper = Mappers.getMapper(BoardMapper.class);
     private final BoardFileMapper boardFileMapper = Mappers.getMapper(BoardFileMapper.class);
     private final CommonUtil commonUtil;
@@ -74,8 +79,18 @@ public class BoardService {
     public BoardDto fineOne(Long boardId) {
         Board board = commonUtil.findBoard(boardId);
         board.increaseViewCount(); // 조회수 증가
+
+        // 게시글에 대한 유저의 좋아요 상태
+        List<Like> likes = likeRepository.findAllByBoardId(boardId);
+        for (Like like : likes) {
+            if (like.getUser().getId() == getUserId()) {
+                board.updateIsLikedByUser(true);
+                break;
+            }
+        }
         BoardDto boardDto = boardMapper.toDto(board);
 
+        // 첨부 파일
         List<BoardFile> files = boardFileRepository.findAllByBoardId(boardId);
         for (BoardFile file : files) {
             BoardFileDto boardFileDto = boardFileMapper.toDto(file);
