@@ -8,7 +8,7 @@ export default function MyBoards() {
 
   return (
     <section className="ml-1 flex-1">
-      <h1 className="text-2xl font-bold pb-5 mb-5 border-b-2 border-gray-200">
+      <h1 className="text-2xl font-bold pb-5 border-b-2 border-gray-200">
         내가 작성한 글
       </h1>
       {isLoading && <p>Loading...</p>}
