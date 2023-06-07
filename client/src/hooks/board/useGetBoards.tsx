@@ -6,10 +6,8 @@ import { GetBoardListResponse } from "types/board";
 export default function useGetBoards(boardApi = new BoardApi()) {
   const { searchParams } = useSearch();
 
-  const getBoardList = useQuery<GetBoardListResponse, Error>(
-    ["boards"],
-    () => boardApi.getBoardList(searchParams),
-    { staleTime: 1000 * 60 }
+  const getBoardList = useQuery<GetBoardListResponse, Error>(["boards"], () =>
+    boardApi.getBoardList(searchParams)
   );
 
   return { getBoardList };

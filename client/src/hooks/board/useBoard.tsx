@@ -8,7 +8,7 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
   const queryClient = useQueryClient();
 
   const singleBoardQuery = useQuery<Board, Error>(
-    ["boards", { boardId }],
+    ["boards", { boardId, userId: user?.id }],
     () => boardApi.getSingleBoard(boardId!),
     { staleTime: 1000 * 60 * 5, enabled: !!boardId && !!user }
   );
@@ -16,10 +16,8 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
   const createBoard = useMutation<{ id: number }, Error, FormData>(
     (data) => boardApi.createBoard(data),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["boards"]);
-        queryClient.invalidateQueries(["boards", { userId: user?.id }]);
-      },
+      onSuccess: () =>
+        queryClient.invalidateQueries(["boards", { userId: user?.id }]),
     }
   );
 
@@ -34,8 +32,7 @@ export default function useBoard(boardId?: number, boardApi = new BoardApi()) {
   );
 
   function updateQueries() {
-    queryClient.invalidateQueries(["boards"]);
-    queryClient.invalidateQueries(["boards", { boardId }]);
+    queryClient.invalidateQueries(["boards", { boardId, userId: user?.id }]);
     queryClient.invalidateQueries(["boards", { userId: user?.id }]);
   }
 

@@ -81,7 +81,11 @@ export default function BoardDetail() {
             {board.files.length > 0 && <BoardFiles files={board.files} />}
           </div>
           <div className="flex gap-x-2 mb-8">
-            <LikeButton boardId={boardId} likeCount={board.likeCount} />
+            <LikeButton
+              boardId={boardId}
+              likeCount={board.likeCount}
+              isLiked={board.likedByUser}
+            />
             <button
               className="flex items-center gap-x-1 px-2 py-1 border border-gray-300"
               onClick={() => setToggleComment((prev) => !prev)}
