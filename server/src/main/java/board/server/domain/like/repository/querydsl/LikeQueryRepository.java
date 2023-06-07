@@ -3,6 +3,7 @@ package board.server.domain.like.repository.querydsl;
 import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.entity.Board;
 import board.server.domain.board.mapper.BoardMapper;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static board.server.domain.like.entity.QLike.*;
+import static com.querydsl.core.types.Order.*;
 
 @Repository
 public class LikeQueryRepository {
@@ -29,6 +31,7 @@ public class LikeQueryRepository {
                 .select(like.board)
                 .from(like)
                 .where(like.user.id.eq(userId))
+                .orderBy(new OrderSpecifier<>(DESC, like.createdAt))
                 .fetch();
         return boardMapper.toDtoList(boardList);
     }

@@ -58,7 +58,7 @@ public class UserService {
      */
     public List<BoardDto> findMyBoardList(Long userId) {
         User user = commonUtil.findUser(userId);
-        List<Board> boardList = boardRepository.findAllByUser(user);
+        List<Board> boardList = boardRepository.findAllByUserOrderByCreatedAtDesc(user);
         return boardMapper.toDtoList(boardList);
     }
 

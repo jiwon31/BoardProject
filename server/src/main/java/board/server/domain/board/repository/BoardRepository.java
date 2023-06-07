@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    List<Board> findAllByUser(User user);
+    List<Board> findAllByUserOrderByCreatedAtDesc(User user);
 }
