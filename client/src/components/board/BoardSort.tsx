@@ -15,7 +15,7 @@ export default function BoardSort() {
   useEffect(() => {
     const sort = searchParams.get("sort");
     if (sort === null || !BOARD_SORT_OPTIONS.includes(sort)) {
-      setSearchParams("sort", "createdAt");
+      searchParams.delete("sort");
       setSortOption("createdAt");
     } else {
       setSortOption(sort);
