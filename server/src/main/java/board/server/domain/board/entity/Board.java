@@ -35,23 +35,28 @@ public class Board extends BaseTime {
     @Convert(converter = BooleanToYnConverter.class)
     private Boolean isDeleted;
 
-    @Column(name = "view_count")
+    @Column(name = "view_cnt")
     private int viewCount;
 
-    @Column(name = "like_count")
+    @Column(name = "like_cnt")
     private int likeCount;
+
+    @Column(name = "comment_cnt")
+    private int commentCount;
 
     @Transient
     private boolean isLikedByUser = false;
 
     @Builder
-    public Board(String title, String content, User user, Boolean isDeleted, int viewCount, int likeCount) {
+    public Board(String title, String content, User user, Boolean isDeleted,
+                 int viewCount, int likeCount, int commentCount) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.isDeleted = isDeleted;
         this.viewCount = viewCount;
         this.likeCount = likeCount;
+        this.commentCount = commentCount;
     }
 
     public boolean getIsLikedByUser() {
@@ -82,6 +87,16 @@ public class Board extends BaseTime {
     // 좋아요수 감소
     public void decreaseLikeCount() {
         this.likeCount -= 1;
+    }
+
+    // 댓글수 증가
+    public void increaseCommentCount() {
+        this.commentCount += 1;
+    }
+
+    // 댓글수 감소
+    public void decreaseCommentCount() {
+        this.commentCount -= 1;
     }
 
     // 게시글에 대한 유저의 좋아요 상태 변경

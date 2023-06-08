@@ -30,12 +30,14 @@ public class GetBoardResponse {
 
     private final int likeCount;
 
+    private final int commentCount;
+
     private final boolean isLikedByUser;
 
     @Builder
     public GetBoardResponse(Long id, String title, String content, Long userId,
-                            String userName, Boolean isDeleted, LocalDateTime createdAt,
-                            List<BoardFileDto> files, int viewCount, int likeCount, boolean isLikedByUser) {
+                            String userName, Boolean isDeleted, LocalDateTime createdAt, List<BoardFileDto> files,
+                            int viewCount, int likeCount, int commentCount, boolean isLikedByUser) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -46,6 +48,7 @@ public class GetBoardResponse {
         this.files = files;
         this.viewCount = viewCount;
         this.likeCount = likeCount;
+        this.commentCount = commentCount;
         this.isLikedByUser = isLikedByUser;
     }
 }

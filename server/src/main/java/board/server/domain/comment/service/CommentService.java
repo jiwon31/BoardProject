@@ -2,6 +2,7 @@ package board.server.domain.comment.service;
 
 import board.server.common.exception.CommentAlreadyDeletedException;
 import board.server.common.exception.CommentNotFoundException;
+import board.server.common.exception.DeletedBoardException;
 import board.server.common.exception.UserNotCommentAuthorException;
 import board.server.common.util.CommonUtil;
 import board.server.domain.board.entity.Board;
@@ -40,10 +41,11 @@ public class CommentService {
      */
     @Transactional
     public CommentDto create(Long userId, Long boardId, CommentDto commentDto) {
+        Board board = checkDeletedBoard(boardId);
         User user = commonUtil.findUser(userId);
-        Board board = commonUtil.findBoard(boardId);
-        Comment comment = commentMapper.toEntity(commentDto, user, board);
-        return commentMapper.toDto(commentRepository.save(comment));
+        Comment comment = commentRepository.save(commentMapper.toEntity(commentDto, user, board));
+        board.increaseCommentCount();
+        return commentMapper.toDto(comment);
     }
 
     /**
@@ -57,15 +59,17 @@ public class CommentService {
      */
     @Transactional
     public CommentDto createNested(Long userId, Long boardId, Long commentId, CommentDto commentDto) {
+        Board board = checkDeletedBoard(boardId);
         User user = commonUtil.findUser(userId);
-        Board board = commonUtil.findBoard(boardId);
-        Comment comment = commentMapper.toEntity(commentDto, user, board);
+        Comment child = commentMapper.toEntity(commentDto, user, board);
 
         Comment parent = findComment(commentId);
         isCommentDeleted(parent); // 삭제된 댓글인지 검사 (삭제된 댓글엔 대댓글을 작성할 수 없다.)
-        parent.addChildComment(comment);
+        parent.addChildComment(child);
 
-        return commentMapper.toDto(commentRepository.save(comment));
+        Comment comment = commentRepository.save(child);
+        board.increaseCommentCount(); // 댓글수 증가
+        return commentMapper.toDto(comment);
     }
 
     /**
@@ -74,7 +78,8 @@ public class CommentService {
      * @param commentDto : 수정한 댓글 정보
      */
     @Transactional
-    public CommentDto update(CommentDto commentDto) {
+    public CommentDto update(Long boardId, CommentDto commentDto) {
+        checkDeletedBoard(boardId);
         Comment comment = findComment(commentDto.getId());
         comment.update(commentDto);
         return commentMapper.toDto(comment);
@@ -86,9 +91,11 @@ public class CommentService {
      * @param commentId : 댓글 식별자
      */
     @Transactional
-    public void delete(Long commentId) {
+    public void delete(Long boardId, Long commentId) {
+        Board board = checkDeletedBoard(boardId);
         Comment comment = findComment(commentId);
         comment.delete();
+        board.decreaseCommentCount();
     }
 
     /**
@@ -114,6 +121,18 @@ public class CommentService {
     }
 
     /**
+     * 삭제된 게시글인지 검사
+     * (삭제된 게시글에선 댓글과 관련된 작업을 할 수 없다.)
+     */
+    private Board checkDeletedBoard(Long boardId) {
+        Board board = commonUtil.findBoard(boardId);
+        if (board.getIsDeleted()) {
+            throw new DeletedBoardException(boardId);
+        }
+        return board;
+    }
+
+    /**
      * 특정 댓글 검색
      */
     private Comment findComment(Long id) {
@@ -123,11 +142,10 @@ public class CommentService {
     /**
      * 이미 삭제된 댓글인지 검사
      */
-    private boolean isCommentDeleted(Comment parent) {
+    private void isCommentDeleted(Comment parent) {
         if (parent.getIsDeleted()) {
             throw new CommentAlreadyDeletedException(parent.getId());
         }
-        return false;
     }
 
     /**

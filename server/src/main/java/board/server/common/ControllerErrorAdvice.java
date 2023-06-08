@@ -60,6 +60,12 @@ public class ControllerErrorAdvice {
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DeletedBoardException.class)
+    public ErrorResponse handleDeletedBoardException() {
+        return new ErrorResponse("삭제된 게시글에서 댓글을 작성/수정 할 수 없습니다.");
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(CommentAlreadyDeletedException.class)
     public ErrorResponse handleCommentAlreadyDeletedException() {
         return new ErrorResponse("삭제된 댓글에는 답글을 작성할 수 없습니다.");

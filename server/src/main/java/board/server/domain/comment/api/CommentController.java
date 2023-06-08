@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import static board.server.common.util.SecurityUtil.*;
 
 @RestController
+@RequestMapping("/boards")
 @RequiredArgsConstructor
 public class CommentController {
 
@@ -30,7 +31,7 @@ public class CommentController {
     /**
      * 댓글 생성
      */
-    @PostMapping("/boards/{boardId}/comments")
+    @PostMapping("/{boardId}/comments")
     public ResponseEntity<CreateCommentResponse> createComment(@PathVariable Long boardId, @RequestBody @Valid CreateCommentRequest request) {
         CommentDto commentDto = dtoMapper.fromCreateRequest(request);
         Long commentId = commentService.create(getUserId(), boardId, commentDto).getId();
@@ -40,7 +41,7 @@ public class CommentController {
     /**
      * 대댓글 생성
      */
-    @PostMapping("/boards/{boardId}/comments/{commentId}")
+    @PostMapping("/{boardId}/comments/{commentId}")
     public ResponseEntity<CreateCommentResponse> createNestedComment(@PathVariable Long boardId,
                                                                      @PathVariable Long commentId,
                                                                      @RequestBody @Valid CreateCommentRequest request) {
@@ -52,30 +53,34 @@ public class CommentController {
     /**
      * 댓글 수정
      */
-    @PutMapping("/comments/{commentId}")
-    public ResponseEntity<UpdateCommentResponse> updateComment(@PathVariable Long commentId, @RequestBody @Valid UpdateCommentRequest request) {
+    @PutMapping("/{boardId}/comments/{commentId}")
+    public ResponseEntity<UpdateCommentResponse> updateComment(@PathVariable Long boardId,
+                                                               @PathVariable Long commentId,
+                                                               @RequestBody @Valid UpdateCommentRequest request) {
         commentService.checkCommentAuthor(commentId, getUserId());
         CommentDto requestDto = dtoMapper.fromUpdateRequest(commentId, request);
-        CommentDto commentDto = commentService.update(requestDto);
+        CommentDto commentDto = commentService.update(boardId, requestDto);
         return ResponseEntity.ok(dtoMapper.toUpdateResponse(commentDto));
     }
 
     /**
      * 댓글 삭제
      */
-    @PatchMapping("/comments/{commentId}")
-    public ResponseEntity<Objects> deleteComment(@PathVariable Long commentId) {
+    @PatchMapping("/{boardId}/comments/{commentId}")
+    public ResponseEntity<Objects> deleteComment(@PathVariable Long boardId, @PathVariable Long commentId) {
         commentService.checkCommentAuthor(commentId, getUserId());
-        commentService.delete(commentId);
+        commentService.delete(boardId, commentId);
         return ResponseEntity.noContent().build();
     }
 
     /**
      * 댓글 리스트 조회
      */
-    @GetMapping("/boards/{boardId}/comments")
+    @GetMapping("/{boardId}/comments")
     public ResponseEntity<List<GetCommentListResponse>> getCommentList(@PathVariable Long boardId) {
         List<CommentDto> commentList = commentService.findAll(boardId);
-        return ResponseEntity.ok(commentList.stream().map(dtoMapper::toGetResponse).collect(Collectors.toList()));
+        return ResponseEntity.ok(commentList.stream()
+                .map(dtoMapper::toGetResponse)
+                .collect(Collectors.toList()));
     }
 }
