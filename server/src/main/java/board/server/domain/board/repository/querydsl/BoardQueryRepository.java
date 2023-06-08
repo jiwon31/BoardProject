@@ -10,7 +10,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +19,7 @@ import java.util.List;
 import static board.server.domain.board.entity.QBoard.*;
 import static board.server.domain.user.entitiy.QUser.*;
 import static com.querydsl.core.types.Order.DESC;
+import static org.springframework.data.domain.Sort.*;
 import static org.springframework.util.StringUtils.*;
 
 @Repository
@@ -39,7 +39,7 @@ public class BoardQueryRepository {
                 .selectFrom(board)
                 .join(board.user, user)
                 .where(titleContains(title), contentContains(content))
-                .orderBy(boardSort(pageable.getSort()))
+                .orderBy(boardSort(pageable))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -67,8 +67,12 @@ public class BoardQueryRepository {
         return board.content.contains(content);
     }
 
-    private OrderSpecifier<?> boardSort(Sort sort) {
-        // TODO: 조회수, 좋아요 등 정렬 조건 추가
+    private OrderSpecifier<?> boardSort(Pageable pageable) {
+        for (Order order : pageable.getSort()) {
+            if (order.getProperty().equals("likeCnt")) {
+                return new OrderSpecifier<>(DESC, board.likeCount);
+            }
+        }
         return new OrderSpecifier<>(DESC, board.createdAt);
     }
 }
