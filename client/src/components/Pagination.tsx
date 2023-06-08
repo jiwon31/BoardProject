@@ -1,5 +1,5 @@
 import useSearch from "hooks/useSearch";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Pagination({ totalPages }: { totalPages?: number }) {
   const { searchParams, setSearchParams } = useSearch();
@@ -11,6 +11,11 @@ export default function Pagination({ totalPages }: { totalPages?: number }) {
     setPage(num);
     setSearchParams("page", num.toString());
   };
+
+  useEffect(
+    () => setPage(parseInt(searchParams.get("page") ?? "0")),
+    [searchParams]
+  );
 
   return (
     <div className="flex flex-row p-3 text-lg font-semibold border border-gray-300 rounded-md">
