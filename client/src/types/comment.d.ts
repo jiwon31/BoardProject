@@ -14,8 +14,14 @@ export type CreateReplyRequest = {
 }
 
 export type UpdateCommentRequest = {
+    boardId: number;
     commentId: number;
     content: CommentContent;
+}
+
+export type DeleteCommentRequest = {
+    boardId: number;
+    commentId: number;
 }
 
 export type Comment = {

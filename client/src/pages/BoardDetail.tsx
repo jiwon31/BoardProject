@@ -92,6 +92,7 @@ export default function BoardDetail() {
             >
               <FaRegCommentDots />
               <span>댓글</span>
+              <span>{board.commentCount}</span>
             </button>
           </div>
           {toggleComment && <CommentContainer boardId={boardId} />}

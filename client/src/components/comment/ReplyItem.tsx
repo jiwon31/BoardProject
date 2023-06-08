@@ -25,7 +25,7 @@ export default function ReplyItem({
 
   const handleUpdate = (content: string) =>
     updateComment.mutate(
-      { commentId: id, content: { content } },
+      { boardId, commentId: id, content: { content } },
       {
         onSuccess: () => setIsEditMode(false),
         onError: (error) => alert(error.message),
@@ -33,9 +33,12 @@ export default function ReplyItem({
     );
 
   const handleDelete = () =>
-    deleteComment.mutate(id, {
-      onError: (error) => alert(error.message),
-    });
+    deleteComment.mutate(
+      { boardId, commentId: id },
+      {
+        onError: (error) => alert(error.message),
+      }
+    );
 
   return (
     <li className="flex flex-col">

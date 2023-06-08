@@ -4,6 +4,7 @@ import {
   CommentContent,
   CreateCommentRequest,
   CreateReplyRequest,
+  DeleteCommentRequest,
   UpdateCommentRequest,
 } from "types/comment";
 
@@ -31,16 +32,17 @@ export default function useComment(
     Error,
     UpdateCommentRequest
   >((data) => commentApi.updateComment(data), {
-    onSuccess: updateQueries,
+    onSuccess: () => queryClient.invalidateQueries(["comments", { boardId }]),
   });
 
-  const deleteComment = useMutation<void, Error, number>(
-    (commentId) => commentApi.deleteComment(commentId),
+  const deleteComment = useMutation<void, Error, DeleteCommentRequest>(
+    (data) => commentApi.deleteComment(data),
     { onSuccess: updateQueries }
   );
 
   function updateQueries() {
     queryClient.invalidateQueries(["comments", { boardId }]);
+    queryClient.invalidateQueries(["boards", { boardId }]);
   }
 
   return {
