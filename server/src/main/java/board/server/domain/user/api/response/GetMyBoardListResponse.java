@@ -1,39 +1,21 @@
 package board.server.domain.user.api.response;
 
+import board.server.domain.board.api.response.GetBoardListResult;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class GetMyBoardListResponse {
-    private final Long id;
 
-    private final String title;
+    private Boolean isLast;
 
-    private final String content;
-
-    private final String userName;
-
-    private final Boolean isDeleted;
-
-    private final LocalDateTime createdAt;
-
-    private final int likeCount;
-
-    private final int commentCount;
+    private List<GetBoardListResult> boards;
 
     @Builder
-    public GetMyBoardListResponse(Long id, String title, String content,
-                                  String userName, Boolean isDeleted, LocalDateTime createdAt,
-                                  int likeCount, int commentCount) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.userName = userName;
-        this.isDeleted = isDeleted;
-        this.createdAt = createdAt;
-        this.likeCount = likeCount;
-        this.commentCount = commentCount;
+    public GetMyBoardListResponse(boolean isLast, List<GetBoardListResult> boards) {
+        this.isLast = isLast;
+        this.boards = boards;
     }
 }

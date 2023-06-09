@@ -11,10 +11,10 @@ import board.server.domain.user.mapper.UserMapper;
 import board.server.domain.user.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -56,10 +56,10 @@ public class UserService {
      *
      * @param userId : 유저 식별자
      */
-    public List<BoardDto> findMyBoardList(Long userId) {
+    public Page<BoardDto> findMyBoardList(Long userId, Pageable pageable) {
         User user = commonUtil.findUser(userId);
-        List<Board> boardList = boardRepository.findAllByUserOrderByCreatedAtDesc(user);
-        return boardMapper.toDtoList(boardList);
+        Page<Board> boardList = boardRepository.findAllByUserOrderByCreatedAtDesc(user, pageable);
+        return boardList.map((board -> boardMapper.toDto(board)));
     }
 
     /**

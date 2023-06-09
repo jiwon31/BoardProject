@@ -1,6 +1,8 @@
 package board.server.domain.user.api;
 
+import board.server.domain.board.api.response.GetBoardListResult;
 import board.server.domain.board.dto.BoardDto;
+import board.server.domain.board.mapper.BoardDtoMapper;
 import board.server.domain.user.api.request.CheckEmailDuplicateRequest;
 import board.server.domain.user.api.request.CheckUserNameDuplicateRequset;
 import board.server.domain.user.api.request.UpdateUserInfoRequest;
@@ -13,6 +15,10 @@ import board.server.domain.user.service.UserService;
 import board.server.domain.user.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +35,8 @@ public class UserController {
 
     private final UserService userService;
     private final UserDtoMapper userDtoMapper = Mappers.getMapper(UserDtoMapper.class);
+    private final BoardDtoMapper boardDtoMapper = Mappers.getMapper(BoardDtoMapper.class);
+
     private final UserUtil userUtil;
 
     /**
@@ -72,8 +80,13 @@ public class UserController {
      * 사용자가 작성한 게시글 리스트 조회
      */
     @GetMapping("/boards")
-    public ResponseEntity<List<GetMyBoardListResponse>> getMyBoardList() {
-        List<BoardDto> myBoardList = userService.findMyBoardList(getUserId());
-        return ResponseEntity.ok(myBoardList.stream().map(userDtoMapper::toGetMyBoardListResponse).collect(Collectors.toList()));
+    public ResponseEntity<GetMyBoardListResponse> getMyBoardList(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<BoardDto> myBoardList = userService.findMyBoardList(getUserId(), pageable);
+        List<GetBoardListResult> collect = myBoardList.getContent()
+                .stream()
+                .map(boardDtoMapper::toGetListResult)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new GetMyBoardListResponse(myBoardList.isLast(), collect));
     }
 }
