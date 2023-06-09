@@ -14,7 +14,7 @@ public class GetMyBoardListResponse {
     private List<GetBoardListResult> boards;
 
     @Builder
-    public GetMyBoardListResponse(boolean isLast, List<GetBoardListResult> boards) {
+    public GetMyBoardListResponse(Boolean isLast, List<GetBoardListResult> boards) {
         this.isLast = isLast;
         this.boards = boards;
     }

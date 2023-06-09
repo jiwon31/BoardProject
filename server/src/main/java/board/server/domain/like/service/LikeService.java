@@ -10,10 +10,10 @@ import board.server.domain.like.repository.LikeRepository;
 import board.server.domain.like.repository.querydsl.LikeQueryRepository;
 import board.server.domain.user.entitiy.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static board.server.common.util.SecurityUtil.*;
 
@@ -68,9 +68,10 @@ public class LikeService {
     /**
      * 유저가 좋아요한 게시글만 조회
      *
-     * @param userId : 유저 식별자
+     * @param userId   : 유저 식별자
+     * @param pageable : 페이지
      */
-    public List<BoardDto> findUserLikedBoardList(Long userId) {
-        return likeQueryRepository.findUserLikedBoardList(userId);
+    public Page<BoardDto> findUserLikedBoardList(Long userId, Pageable pageable) {
+        return likeQueryRepository.findUserLikedBoardList(userId, pageable);
     }
 }

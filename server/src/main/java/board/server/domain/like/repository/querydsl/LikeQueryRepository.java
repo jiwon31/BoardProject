@@ -4,8 +4,12 @@ import board.server.domain.board.dto.BoardDto;
 import board.server.domain.board.entity.Board;
 import board.server.domain.board.mapper.BoardMapper;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -26,13 +30,22 @@ public class LikeQueryRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<BoardDto> findUserLikedBoardList(Long userId) {
-        List<Board> boardList = query
+    public Page<BoardDto> findUserLikedBoardList(Long userId, Pageable pageable) {
+        List<Board> boards = query
                 .select(like.board)
                 .from(like)
                 .where(like.user.id.eq(userId))
                 .orderBy(new OrderSpecifier<>(DESC, like.createdAt))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
-        return boardMapper.toDtoList(boardList);
+
+        JPAQuery<Long> countQuery = query
+                .select(like.board.count())
+                .from(like)
+                .where(like.user.id.eq(userId));
+
+        List<BoardDto> boardList = boardMapper.toDtoList(boards);
+        return PageableExecutionUtils.getPage(boardList, pageable, countQuery::fetchOne);
     }
 }
