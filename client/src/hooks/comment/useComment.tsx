@@ -1,5 +1,6 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import CommentApi from "api/comment-api";
+import useRecoilUser from "hooks/useRecoilUser";
 import {
   CommentContent,
   CreateCommentRequest,
@@ -12,6 +13,7 @@ export default function useComment(
   boardId: number,
   commentApi = new CommentApi()
 ) {
+  const { user } = useRecoilUser();
   const queryClient = useQueryClient();
 
   const createComment = useMutation<
@@ -43,6 +45,8 @@ export default function useComment(
   function updateQueries() {
     queryClient.invalidateQueries(["comments", { boardId }]);
     queryClient.invalidateQueries(["boards", { boardId }]);
+    queryClient.invalidateQueries(["boards", { userId: user?.id }]);
+    queryClient.invalidateQueries(["liked-boards", { userId: user?.id }]);
   }
 
   return {
