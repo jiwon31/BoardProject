@@ -14,8 +14,15 @@ export default function LikeButton({
 }: LikeButtonProps) {
   const { addLikeToBoard, cancelLikeFromBoard } = useLike(boardId);
 
-  const handleAddLike = () => addLikeToBoard.mutate(boardId);
-  const handleCancelLike = () => cancelLikeFromBoard.mutate(boardId);
+  const handleAddLike = () =>
+    addLikeToBoard.mutate(boardId, {
+      onError: (error) => alert(error.message),
+    });
+
+  const handleCancelLike = () =>
+    cancelLikeFromBoard.mutate(boardId, {
+      onError: (error) => alert(error.message),
+    });
 
   return (
     <div className="flex items-center gap-x-1 px-2 py-1 border border-gray-300">
