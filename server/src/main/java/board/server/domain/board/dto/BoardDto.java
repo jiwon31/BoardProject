@@ -31,12 +31,12 @@ public class BoardDto {
 
     private final int commentCount;
 
-    private final boolean isLikedByUser;
+    private final Boolean isLikedByUser;
 
     @Builder
     public BoardDto(Long id, String title, String content,
                     Long userId, String userName, Boolean isDeleted, LocalDateTime createdAt,
-                    int viewCount, int likeCount, int commentCount, boolean isLikedByUser) {
+                    int viewCount, int likeCount, int commentCount, Boolean isLikedByUser) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -48,9 +48,5 @@ public class BoardDto {
         this.likeCount = likeCount;
         this.commentCount = commentCount;
         this.isLikedByUser = isLikedByUser;
-    }
-
-    public boolean getIsLikedByUser() {
-        return this.isLikedByUser;
     }
 }

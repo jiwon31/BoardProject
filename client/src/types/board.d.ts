@@ -26,7 +26,7 @@ export type Board = {
 	viewCount: number;
 	likeCount: number;
 	commentCount: number;
-	likedByUser: boolean;
+	isLikedByUser: boolean;
 }
 
 type BoardFile = {

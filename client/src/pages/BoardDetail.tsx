@@ -84,7 +84,7 @@ export default function BoardDetail() {
             <LikeButton
               boardId={boardId}
               likeCount={board.likeCount}
-              isLiked={board.likedByUser}
+              isLiked={board.isLikedByUser}
             />
             <button
               className="flex items-center gap-x-1 px-2 py-1 border border-gray-300"

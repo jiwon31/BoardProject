@@ -45,7 +45,7 @@ public class Board extends BaseTime {
     private int commentCount;
 
     @Transient
-    private boolean isLikedByUser = false;
+    private Boolean isLikedByUser = false;
 
     @Builder
     public Board(String title, String content, User user, Boolean isDeleted,
@@ -57,10 +57,6 @@ public class Board extends BaseTime {
         this.viewCount = viewCount;
         this.likeCount = likeCount;
         this.commentCount = commentCount;
-    }
-
-    public boolean getIsLikedByUser() {
-        return this.isLikedByUser;
     }
 
     // 수정
@@ -100,7 +96,7 @@ public class Board extends BaseTime {
     }
 
     // 게시글에 대한 유저의 좋아요 상태 변경
-    public void updateIsLikedByUser(boolean isLikedByUser) {
+    public void updateIsLikedByUser(Boolean isLikedByUser) {
         this.isLikedByUser = isLikedByUser;
     }
 }
