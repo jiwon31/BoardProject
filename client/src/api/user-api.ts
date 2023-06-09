@@ -1,6 +1,5 @@
-import { User, UpdateUserRequest } from 'types/user';
+import { User, UpdateUserRequest, GetMyBoardListResponse } from 'types/user';
 import { instance } from './axios.config';
-import { Board } from 'types/board';
 
 export default class UserApi {
     async getUserInfo() {
@@ -13,8 +12,8 @@ export default class UserApi {
         return response.data;
     }
 
-    async getMyBoardList() {
-        const response = await instance.get<Board[]>("/users/boards");
+    async getMyBoardList(page?: number) {
+        const response = await instance.get<GetMyBoardListResponse>("/users/boards", {params: {page}});
         return response.data;
     }
 
