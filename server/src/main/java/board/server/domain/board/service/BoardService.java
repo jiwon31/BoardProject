@@ -78,7 +78,9 @@ public class BoardService {
     @Transactional
     public BoardDto fineOne(Long boardId) {
         Board board = commonUtil.findBoard(boardId);
-        board.increaseViewCount(); // 조회수 증가
+        if (board.getUser().getId() != getUserId()) {
+            board.increaseViewCount(); // 조회수 증가
+        }
 
         // 게시글에 대한 유저의 좋아요 상태
         List<Like> likes = likeRepository.findAllByBoardId(boardId);
