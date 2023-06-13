@@ -31,4 +31,5 @@
 | Language | HTML5, tailwind CSS, TypeScript |
 | UI Library | React 18 |
 | State Management Libarary | Recoil |
+| Asynchronous State Management Libarary | React Query |
 | HTTP Libarary | Axios |
